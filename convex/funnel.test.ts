@@ -157,6 +157,32 @@ describe("повторная попытка", () => {
   });
 });
 
+describe("история попыток", () => {
+  test("подписчик видит все свои попытки по порядку, текущая отмечена", async () => {
+    const { t, token } = await finishedAttempt();
+    await t.mutation(api.payments.checkout, { token, email: "user@example.com" });
+    const second = (await t.mutation(api.attempts.start, { previousToken: token })).token;
+    await t.mutation(api.attempts.finish, { token: second });
+
+    const history = await t.query(api.attempts.history, { token: second });
+    expect(history.map((h) => h.iq)).toEqual([138, 70]);
+    expect(history.map((h) => h.current)).toEqual([false, true]);
+  });
+
+  test("без оплаты история пуста, чужие попытки в неё не попадают", async () => {
+    const { t, token } = await finishedAttempt();
+    expect(await t.query(api.attempts.history, { token })).toEqual([]);
+
+    await t.mutation(api.payments.checkout, { token, email: "user@example.com" });
+    const other = await t.mutation(api.attempts.start, {});
+    await t.mutation(api.attempts.finish, { token: other.token });
+    await t.mutation(api.payments.checkout, { token: other.token, email: "other@example.com" });
+
+    expect(await t.query(api.attempts.history, { token })).toHaveLength(1);
+    expect(await t.query(api.attempts.history, { token: "нет такой" })).toEqual([]);
+  });
+});
+
 describe("отмена подписки", () => {
   test("отменяет платежи с этим email и не трогает чужие", async () => {
     const { t, token } = await finishedAttempt();

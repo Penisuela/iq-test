@@ -126,6 +126,29 @@ export const result = query({
   },
 });
 
+// История завершённых попыток подписчика — для блока «Ваша динамика».
+// Отдаётся только владельцу оплаченной попытки; у остальных список пуст.
+export const history = query({
+  args: { token: v.string() },
+  returns: v.array(
+    v.object({ finishedAt: v.number(), iq: v.number(), current: v.boolean() }),
+  ),
+  handler: async (ctx, { token }) => {
+    const attempt = await findAttemptByToken(ctx, token);
+    if (!attempt?.paid || attempt.email === undefined) return [];
+
+    const attempts = await ctx.db
+      .query("attempts")
+      .withIndex("by_email", (q) => q.eq("email", attempt.email))
+      .collect();
+
+    return attempts
+      .filter((a) => a.paid && a.finishedAt !== undefined && a.iq !== undefined)
+      .sort((a, b) => a.finishedAt! - b.finishedAt!)
+      .map((a) => ({ finishedAt: a.finishedAt!, iq: a.iq!, current: a._id === attempt._id }));
+  },
+});
+
 // Вызывается только с сервера: сейчас имитацией оплаты, позже вебхуком провайдера.
 export const markPaid = internalMutation({
   args: { attemptId: v.id("attempts"), email: v.string() },

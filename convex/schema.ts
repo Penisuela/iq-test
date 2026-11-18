@@ -20,7 +20,9 @@ export default defineSchema({
     paid: v.boolean(),
     // Email подписчика: по нему повторные попытки открываются без новой оплаты.
     email: v.optional(v.string()),
-  }).index("by_token", ["token"]),
+  })
+    .index("by_token", ["token"])
+    .index("by_email", ["email"]),
 
   payments: defineTable({
     attemptId: v.id("attempts"),
