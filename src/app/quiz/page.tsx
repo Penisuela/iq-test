@@ -4,10 +4,12 @@ import { useMutation, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
+import { BoostScreen } from "@/components/BoostScreen";
 import { Figure } from "@/components/Figure";
 import { Matrix } from "@/components/Matrix";
 import { Timer } from "@/components/Timer";
 import { buttonClass, Header, Loading, ProgressBar, Screen } from "@/components/ui";
+import { type Boost, BOOST_MILESTONES, buildBoost } from "@/lib/boost";
 import { errorMessage } from "@/lib/errors";
 import { readStored, SUBSCRIBER_KEY, TOKEN_KEY, useStored, writeStored } from "@/lib/storage";
 
@@ -31,6 +33,8 @@ export default function QuizPage() {
   // Ответы, выбранные в этой сессии: показываем их сразу, не дожидаясь сервера.
   const [picked, setPicked] = useState<Record<string, number>>({});
   const [finishing, setFinishing] = useState(false);
+  // Экран поддержки, который сейчас показан вместо вопроса.
+  const [boost, setBoost] = useState<Boost | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Попытки с сохранённым токеном больше нет — забываем его и начинаем заново.
@@ -92,6 +96,17 @@ export default function QuizPage() {
     answer({ token, questionId: question.id, option }).catch((e) =>
       setError(errorMessage(e)),
     );
+
+    // После 5, 10 и 15 ответов показываем экран поддержки. Повторный ответ на тот же вопрос не считается.
+    const answeredNow = question.id in answers ? answeredCount : answeredCount + 1;
+    const milestone = BOOST_MILESTONES.find((m) => m === answeredNow && !(question.id in answers));
+    if (milestone !== undefined) {
+      const startedAt = attempt!.startedAt;
+      window.setTimeout(() => {
+        const elapsedSec = Math.max(1, (Date.now() - startedAt) / 1000);
+        setBoost(buildBoost(milestone, elapsedSec));
+      }, ADVANCE_DELAY_MS);
+    }
 
     // Переходим к следующему вопросу без ответа; если такого нет — остаёмся на месте.
     const next = [...questions!.keys()]
@@ -158,8 +173,11 @@ export default function QuizPage() {
           </nav>
         </div>
 
+        {boost && <BoostScreen boost={boost} onContinue={() => setBoost(null)} />}
+
         <div
           key={question.id}
+          hidden={boost !== null}
           className="flex animate-rise flex-col gap-5 rounded-[2rem] bg-accent-soft p-4 sm:p-6 md:gap-8 md:p-8"
         >
           <h1 className="text-2xl font-extrabold leading-snug tracking-tight md:text-3xl">
