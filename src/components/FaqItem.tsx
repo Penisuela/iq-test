@@ -2,24 +2,39 @@
 
 import { useId, useState } from "react";
 
-export function FaqItem({ question, answer }: { question: string; answer: string }) {
+export function FaqItem({
+  index,
+  question,
+  answer,
+}: {
+  index: number;
+  question: string;
+  answer: string;
+}) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
 
   return (
-    <div className="rounded-2xl border border-border bg-surface">
+    <div className="border-t-2 border-foreground last:border-b-2">
       <button
         type="button"
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen(!open)}
-        className="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left font-bold"
+        className="group flex w-full cursor-pointer items-center gap-4 py-5 text-left sm:gap-8 sm:py-7"
       >
-        {question}
+        <span className="w-8 shrink-0 text-sm font-bold tabular-nums text-muted sm:w-12 sm:text-base">
+          0{index + 1}
+        </span>
+        <span className="flex-1 text-xl font-extrabold tracking-tight sm:text-3xl">
+          {question}
+        </span>
         <span
           aria-hidden
-          className={`text-2xl font-medium leading-none text-muted transition-transform duration-300 ${
-            open ? "rotate-45" : ""
+          className={`grid size-10 shrink-0 place-items-center rounded-full text-2xl font-medium leading-none transition duration-300 sm:size-12 ${
+            open
+              ? "rotate-45 bg-foreground text-highlight"
+              : "bg-surface group-hover:bg-highlight"
           }`}
         >
           +
@@ -34,7 +49,7 @@ export function FaqItem({ question, answer }: { question: string; answer: string
         }`}
       >
         <div className="overflow-hidden">
-          <p className="px-5 pb-4 text-muted">{answer}</p>
+          <p className="max-w-2xl pb-6 pl-12 text-lg text-muted sm:pb-8 sm:pl-20">{answer}</p>
         </div>
       </div>
     </div>

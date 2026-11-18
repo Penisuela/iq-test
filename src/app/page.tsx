@@ -13,8 +13,9 @@ import {
   SparkIcon,
 } from "@/components/icons";
 import { MatrixPuzzle } from "@/components/MatrixPuzzle";
+import { SkillRadar } from "@/components/SkillRadar";
 import { TrackEvent } from "@/components/TrackEvent";
-import { buttonClass, Card, Header, ProgressBar } from "@/components/ui";
+import { buttonClass, Card, Header } from "@/components/ui";
 
 const NAV = [
   { href: "#tasks", label: "Задания" },
@@ -248,45 +249,55 @@ export default function LandingPage() {
           </ol>
         </section>
 
-        <section className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
-          <SectionTitle sub="Не только общий балл, но и то, какие навыки мышления у вас развиты сильнее остальных.">
-            Что вы узнаете
-          </SectionTitle>
-          <Card className="shadow-[0_24px_60px_-30px_rgba(21,22,28,0.35)]">
-            <ul className="flex flex-col gap-5">
+        <section className="grid items-center gap-8 rounded-[2rem] bg-accent p-6 text-white sm:p-10 lg:grid-cols-2 lg:gap-12">
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-3">
+              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Что вы узнаете</h2>
+              <p className="text-lg text-white/75">
+                Не только общий балл, но и то, какие навыки мышления у вас развиты
+                сильнее остальных.
+              </p>
+            </div>
+            <ul className="flex flex-col">
               {SKILLS.map((skill) => (
-                <li key={skill.title} className="flex gap-4">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-accent-soft text-accent">
+                <li
+                  key={skill.title}
+                  className="flex items-center gap-4 border-t border-white/20 py-4 last:border-b"
+                >
+                  <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white/15">
                     <CategoryIcon category={skill.title} />
                   </span>
-                  <div className="flex flex-1 flex-col gap-2">
-                    <div className="flex items-baseline justify-between gap-3">
-                      <h3 className="font-bold">{skill.title}</h3>
-                      <span className="text-sm font-bold tabular-nums">{skill.value}%</span>
-                    </div>
-                    <ProgressBar value={skill.value} />
-                    <p className="text-sm text-muted">{skill.text}</p>
+                  <div className="flex-1">
+                    <h3 className="font-bold">{skill.title}</h3>
+                    <p className="text-sm text-white/70">{skill.text}</p>
                   </div>
+                  <span className="text-3xl font-extrabold tabular-nums text-highlight">
+                    {skill.value}
+                    <span className="text-lg">%</span>
+                  </span>
                 </li>
               ))}
             </ul>
-            <p className="mt-5 border-t border-border pt-4 text-xs text-muted">
+          </div>
+          <div className="mx-auto flex w-full max-w-sm flex-col gap-2">
+            <SkillRadar values={[SKILLS[0].value, SKILLS[1].value, SKILLS[2].value]} />
+            <p className="text-center text-xs text-white/60">
               Пример разбора. Ваши цифры будут другими.
             </p>
-          </Card>
+          </div>
         </section>
 
-        <section id="faq" className="grid scroll-mt-6 gap-8 lg:grid-cols-2 lg:gap-16">
+        <section id="faq" className="flex scroll-mt-6 flex-col gap-8">
           <SectionTitle>Вопросы и ответы</SectionTitle>
-          <div className="flex flex-col gap-3">
-            {FAQ.map((item) => (
-              <FaqItem key={item.q} question={item.q} answer={item.a} />
+          <div>
+            {FAQ.map((item, i) => (
+              <FaqItem key={item.q} index={i} question={item.q} answer={item.a} />
             ))}
           </div>
         </section>
 
         <section className="relative flex flex-col items-center gap-5 overflow-hidden rounded-[2rem] bg-foreground px-6 py-16 text-center text-white">
-          <span className="absolute -left-8 -top-8 size-32 rounded-full bg-accent" />
+          <span className="absolute -left-10 -top-10 size-28 rounded-full bg-accent sm:size-32" />
           <span className="absolute -bottom-10 -right-6 size-36 rotate-12 rounded-[2rem] bg-highlight" />
           <span className="absolute right-10 top-8 size-8 rounded-full border-[5px] border-white/30" />
           <h2 className="relative max-w-md text-3xl font-extrabold tracking-tight sm:text-4xl">
