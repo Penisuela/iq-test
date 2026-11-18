@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import { api } from "../../../convex/_generated/api";
 import { BackIcon, CheckIcon, LockIcon } from "@/components/icons";
+import { EmailField, emailError } from "@/components/EmailField";
 import { TrackEvent } from "@/components/TrackEvent";
 import { buttonClass, Card, Header, Loading, Screen, Tint } from "@/components/ui";
 import { errorMessage } from "@/lib/errors";
@@ -13,7 +14,6 @@ import { useFinishedAttempt } from "@/lib/useAttempt";
 
 const fieldBase =
   "h-14 w-full rounded-2xl border-2 border-transparent px-4 text-base font-medium outline-none transition";
-const fieldClass = `${fieldBase} bg-surface placeholder:font-normal placeholder:text-muted/70 focus:border-accent`;
 const demoFieldClass = `${fieldBase} bg-surface/60 text-muted`;
 const SUCCESS_DELAY_MS = 900;
 
@@ -27,6 +27,7 @@ export default function CheckoutPage() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "pending" | "success">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   const paid = state?.attempt.paid;
   useEffect(() => {
@@ -52,6 +53,8 @@ export default function CheckoutPage() {
 
   async function pay(event: FormEvent) {
     event.preventDefault();
+    setSubmitted(true);
+    if (emailError(email)) return;
     setStatus("pending");
     setError(null);
     try {
@@ -107,21 +110,13 @@ export default function CheckoutPage() {
           </Card>
         </Tint>
 
-        <form onSubmit={pay} className="flex flex-col gap-4 rounded-[2rem] bg-accent-soft p-4 sm:p-6">
-          <label className="flex flex-col gap-2 text-sm font-semibold">
-            Email
-            <input
-              type="email"
-              required
-              autoComplete="email"
-              inputMode="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={fieldClass}
-            />
-            <span className="font-normal text-muted">Пришлём сюда результат и чек.</span>
-          </label>
+        <form onSubmit={pay} noValidate className="flex flex-col gap-4 rounded-[2rem] bg-accent-soft p-4 sm:p-6">
+          <EmailField
+            value={email}
+            onChange={setEmail}
+            showError={submitted}
+            hint="Пришлём сюда результат и чек."
+          />
 
           <div className="flex flex-col gap-2 text-sm font-semibold">
             <span className="flex items-center justify-between">

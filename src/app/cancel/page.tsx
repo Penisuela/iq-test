@@ -4,6 +4,7 @@ import { useMutation } from "convex/react";
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { api } from "../../../convex/_generated/api";
+import { EmailField, emailError } from "@/components/EmailField";
 import { Footer } from "@/components/Footer";
 import { CheckIcon } from "@/components/icons";
 import {
@@ -20,9 +21,12 @@ export default function CancelPage() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "pending" | "done">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    setSubmitted(true);
+    if (emailError(email)) return;
     setStatus("pending");
     setError(null);
     try {
@@ -71,20 +75,13 @@ export default function CancelPage() {
         ) : (
           <Tint>
             <Card>
-              <form onSubmit={submit} className="flex flex-col gap-4">
-                <label className="flex flex-col gap-2 text-sm font-semibold">
-                  Email
-                  <input
-                    type="email"
-                    required
-                    autoComplete="email"
-                    inputMode="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="h-14 w-full rounded-2xl border-2 border-transparent bg-background px-4 text-base font-medium outline-none transition placeholder:font-normal placeholder:text-muted/70 focus:border-accent"
-                  />
-                </label>
+              <form onSubmit={submit} noValidate className="flex flex-col gap-4">
+                <EmailField
+                  value={email}
+                  onChange={setEmail}
+                  showError={submitted}
+                  tone="background"
+                />
                 {error && (
                   <p className="text-sm font-medium text-danger">{error}</p>
                 )}
