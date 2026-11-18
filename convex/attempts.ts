@@ -61,6 +61,7 @@ export const paywall = query({
   returns: v.object({
     status: v.union(v.literal("in_progress"), v.literal("finished")),
     paid: v.boolean(),
+    startedAt: v.number(),
     answered: v.number(),
     total: v.number(),
     durationSec: v.union(v.number(), v.null()),
@@ -70,6 +71,7 @@ export const paywall = query({
     return {
       status: attempt.status,
       paid: attempt.paid,
+      startedAt: attempt.startedAt,
       answered: attempt.answers.length,
       total: QUESTIONS.length,
       durationSec: attempt.finishedAt

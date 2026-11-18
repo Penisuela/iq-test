@@ -4,9 +4,15 @@ import { useMutation, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
-import { Card, Screen } from "@/components/ui";
+import { BackIcon } from "@/components/icons";
+import { Timer } from "@/components/Timer";
+import { Header, Loading, ProgressBar, Screen } from "@/components/ui";
 import { errorMessage } from "@/lib/errors";
 import { readStored, TOKEN_KEY, useStored, writeStored } from "@/lib/storage";
+
+const LETTERS = ["A", "B", "C", "D", "E", "F"];
+// Пауза, чтобы человек увидел выбранный вариант перед переходом.
+const ADVANCE_DELAY_MS = 220;
 
 export default function QuizPage() {
   const router = useRouter();
@@ -19,8 +25,9 @@ export default function QuizPage() {
   const track = useMutation(api.events.track);
 
   const starting = useRef(false);
+  const leaving = useRef(false);
   const [step, setStep] = useState<number | null>(null);
-  const [pending, setPending] = useState(false);
+  const [selected, setSelected] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,77 +42,114 @@ export default function QuizPage() {
   }, [start, track]);
 
   useEffect(() => {
-    if (attempt?.status === "finished") router.replace("/paywall");
+    if (attempt?.status === "finished" && !leaving.current) {
+      router.replace("/paywall");
+    }
   }, [attempt?.status, router]);
 
   if (!token || !questions || !attempt || attempt.status === "finished") {
     return (
-      <Screen>
-        <p className="text-muted">{error ?? "Загружаем тест…"}</p>
-      </Screen>
+      <>
+        <Header />
+        <Loading label={error ?? "Загружаем тест…"} />
+      </>
     );
   }
 
   // Продолжаем с первого неотвеченного вопроса, если страницу перезагрузили.
   const index = Math.min(step ?? attempt.answered, questions.length - 1);
   const question = questions[index];
+  const isLast = index + 1 === questions.length;
 
   async function choose(option: number) {
-    if (pending || !token) return;
-    setPending(true);
+    if (selected !== null || !token) return;
+    setSelected(option);
     setError(null);
     try {
-      await answer({ token, questionId: question.id, option });
-      if (index + 1 < questions!.length) {
-        setStep(index + 1);
-      } else {
+      await Promise.all([
+        answer({ token, questionId: question.id, option }),
+        new Promise((resolve) => setTimeout(resolve, ADVANCE_DELAY_MS)),
+      ]);
+      if (isLast) {
+        leaving.current = true;
         await finish({ token });
         void track({ name: "quiz_finish", token });
-        router.replace("/paywall");
+        router.replace("/analyzing");
+        return;
       }
+      setStep(index + 1);
     } catch (e) {
       setError(errorMessage(e));
-    } finally {
-      setPending(false);
     }
+    setSelected(null);
   }
 
   return (
-    <Screen>
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between text-sm font-medium text-muted">
-          <span>{question.category}</span>
-          <span>
-            {index + 1} из {questions.length}
-          </span>
+    <>
+      <Header>
+        <Timer startedAt={attempt.startedAt} />
+      </Header>
+      <Screen>
+        <div className="flex flex-col gap-2.5">
+          <div className="flex items-center justify-between text-sm font-semibold">
+            <span className="rounded-full bg-accent-soft px-3 py-1 text-accent">
+              {question.category}
+            </span>
+            <span className="tabular-nums text-muted">
+              {index + 1} из {questions.length}
+            </span>
+          </div>
+          <ProgressBar value={((index + 1) / questions.length) * 100} />
         </div>
-        <div className="h-2 overflow-hidden rounded-full bg-border">
-          <div
-            className="h-full rounded-full bg-accent transition-all"
-            style={{ width: `${((index + 1) / questions.length) * 100}%` }}
-          />
+
+        <div key={question.id} className="flex animate-rise flex-col gap-5">
+          <h1 className="py-3 text-2xl font-extrabold leading-snug tracking-tight">
+            {question.prompt}
+          </h1>
+
+          <div className="flex flex-col gap-3">
+            {question.options.map((option, i) => {
+              const isSelected = selected === i;
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  disabled={selected !== null}
+                  onClick={() => choose(i)}
+                  className={`flex min-h-16 items-center gap-4 rounded-2xl border-2 px-4 py-3 text-left text-base font-semibold transition active:scale-[0.99] ${
+                    isSelected
+                      ? "border-accent bg-accent-soft"
+                      : "border-transparent bg-surface shadow-[0_0_0_1px_var(--color-border)] hover:shadow-[0_0_0_1px_var(--color-foreground)]"
+                  }`}
+                >
+                  <span
+                    className={`grid size-9 shrink-0 place-items-center rounded-xl text-sm font-extrabold transition ${
+                      isSelected ? "bg-accent text-white" : "bg-background text-muted"
+                    }`}
+                  >
+                    {LETTERS[i]}
+                  </span>
+                  {option}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      <Card>
-        <h1 className="text-xl font-bold leading-snug">{question.prompt}</h1>
-      </Card>
+        {error && <p className="text-sm font-medium text-danger">{error}</p>}
 
-      <div className="flex flex-col gap-3">
-        {question.options.map((option, i) => (
+        {index > 0 && (
           <button
-            key={`${question.id}-${i}`}
             type="button"
-            disabled={pending}
-            onClick={() => choose(i)}
-            className="min-h-14 rounded-2xl border border-border bg-surface px-5 py-4 text-left text-base font-medium transition active:border-accent active:bg-accent-soft disabled:opacity-60"
+            disabled={selected !== null}
+            onClick={() => setStep(index - 1)}
+            className="mt-auto flex items-center gap-2 self-start py-2 text-sm font-semibold text-muted transition hover:text-foreground disabled:opacity-50"
           >
-            {option}
+            <BackIcon className="size-4" />
+            Предыдущий вопрос
           </button>
-        ))}
-      </div>
-
-      {error && <p className="text-sm text-red-600">{error}</p>}
-    </Screen>
+        )}
+      </Screen>
+    </>
   );
 }
