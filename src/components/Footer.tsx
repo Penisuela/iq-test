@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { OverscrollTint } from "@/components/OverscrollTint";
 
 const COLUMNS = [
   {
@@ -27,15 +28,16 @@ const COLUMNS = [
 export function Footer() {
   return (
     <footer className="mt-auto bg-foreground text-white">
+      <OverscrollTint />
       <div className="mx-auto grid w-full max-w-5xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
         {COLUMNS.map((column) => (
           <div key={column.title} className="flex flex-col gap-2">
             <h3 className="font-bold">{column.title}</h3>
-            <ul className="flex flex-col gap-1.5 text-sm text-white/60">
+            <ul className="flex flex-col text-sm text-white/60">
               {column.items.map((item) => (
-                <li key={item.label}>
+                <li key={item.label} className="py-1">
                   {"href" in item && item.href ? (
-                    <Link href={item.href} className="transition hover:text-white">
+                    <Link href={item.href} className="-my-1 inline-block py-2 transition hover:text-white">
                       {item.label}
                     </Link>
                   ) : (
