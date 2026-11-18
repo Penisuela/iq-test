@@ -148,7 +148,7 @@ export default function LandingPage() {
         </nav>
         <StartLink
           source="header"
-          className="rounded-full bg-foreground px-5 py-2.5 text-sm font-bold text-white transition hover:bg-black"
+          className="rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white transition hover:brightness-110"
         >
           Начать
         </StartLink>

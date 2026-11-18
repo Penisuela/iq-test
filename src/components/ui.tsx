@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 const buttonBase =
   "inline-flex h-14 w-full items-center justify-center gap-2 rounded-2xl px-6 text-base font-bold transition active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50";
 
-export const buttonClass = `${buttonBase} bg-foreground text-white hover:bg-black`;
+export const buttonClass = `${buttonBase} bg-accent text-white shadow-[0_10px_24px_-10px_var(--color-accent)] hover:brightness-110`;
 export const buttonGhostClass = `${buttonBase} border border-border bg-surface text-foreground hover:border-foreground`;
 
 export function Logo() {

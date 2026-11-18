@@ -31,11 +31,14 @@ export function StickyStart() {
   return (
     <div
       inert={!visible}
-      className={`fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/90 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur transition duration-300 md:hidden ${
+      className={`pointer-events-none fixed inset-x-0 bottom-0 z-30 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] transition duration-300 md:hidden ${
         visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
     >
-      <StartLink source="sticky" className={buttonClass}>
+      <StartLink
+        source="sticky"
+        className={`${buttonClass} pointer-events-auto shadow-[0_14px_30px_-8px_var(--color-accent)]`}
+      >
         Начать тест
         <ArrowIcon />
       </StartLink>
