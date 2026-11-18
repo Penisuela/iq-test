@@ -117,6 +117,46 @@ describe("paywall", () => {
   });
 });
 
+describe("повторная попытка", () => {
+  async function retake(t: Awaited<ReturnType<typeof finishedAttempt>>["t"], previousToken: string) {
+    const { token } = await t.mutation(api.attempts.start, { previousToken });
+    await t.mutation(api.attempts.finish, { token });
+    return token;
+  }
+
+  test("с активной подпиской результат открыт без новой оплаты", async () => {
+    const { t, token } = await finishedAttempt();
+    await t.mutation(api.payments.checkout, { token, email: "user@example.com" });
+
+    const second = await retake(t, token);
+    expect(await t.query(api.attempts.result, { token: second })).toMatchObject({ locked: false });
+
+    // Третья попытка опирается на вторую, у которой своего платежа нет.
+    const third = await retake(t, second);
+    expect(await t.query(api.attempts.result, { token: third })).toMatchObject({ locked: false });
+
+    const payments = await t.run((ctx) => ctx.db.query("payments").collect());
+    expect(payments).toHaveLength(1);
+  });
+
+  test("после отмены подписки новая попытка снова платная", async () => {
+    const { t, token } = await finishedAttempt();
+    await t.mutation(api.payments.checkout, { token, email: "user@example.com" });
+    await t.mutation(api.payments.cancelSubscription, { email: "user@example.com" });
+
+    const second = await retake(t, token);
+    expect(await t.query(api.attempts.result, { token: second })).toEqual({ locked: true });
+  });
+
+  test("неоплаченная или чужая прошлая попытка доступа не даёт", async () => {
+    const { t, token } = await finishedAttempt();
+    const fromUnpaid = await retake(t, token);
+    const fromUnknown = await retake(t, "нет такой");
+    expect(await t.query(api.attempts.result, { token: fromUnpaid })).toEqual({ locked: true });
+    expect(await t.query(api.attempts.result, { token: fromUnknown })).toEqual({ locked: true });
+  });
+});
+
 describe("отмена подписки", () => {
   test("отменяет платежи с этим email и не трогает чужие", async () => {
     const { t, token } = await finishedAttempt();

@@ -18,6 +18,8 @@ export default defineSchema({
     percentile: v.optional(v.number()),
     categories: v.optional(v.array(categoryScore)),
     paid: v.boolean(),
+    // Email подписчика: по нему повторные попытки открываются без новой оплаты.
+    email: v.optional(v.string()),
   }).index("by_token", ["token"]),
 
   payments: defineTable({

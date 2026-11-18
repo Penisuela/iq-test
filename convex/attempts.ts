@@ -1,21 +1,28 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation, mutation, query } from "./_generated/server";
-import { findAttemptByToken, getAttemptByToken } from "./lib/attempt";
+import { findAttemptByToken, getAttemptByToken, hasActiveSubscription } from "./lib/attempt";
 import { QUESTIONS } from "./lib/questionBank";
 import { scoreAttempt } from "./lib/scoring";
 import { categoryScore } from "./schema";
 
+// previousToken — токен прошлой попытки. Если она была оплачена и подписка
+// не отменена, новая попытка сразу открыта: подписчик не платит второй раз.
 export const start = mutation({
-  args: {},
+  args: { previousToken: v.optional(v.string()) },
   returns: v.object({ token: v.string() }),
-  handler: async (ctx) => {
+  handler: async (ctx, { previousToken }) => {
+    const previous = previousToken ? await findAttemptByToken(ctx, previousToken) : null;
+    const email = previous?.paid ? previous.email : undefined;
+    const subscribed = email !== undefined && (await hasActiveSubscription(ctx, email));
+
     const token = crypto.randomUUID();
     await ctx.db.insert("attempts", {
       token,
       status: "in_progress",
       answers: [],
       startedAt: Date.now(),
-      paid: false,
+      paid: subscribed,
+      ...(subscribed ? { email } : {}),
     });
     return { token };
   },
@@ -121,10 +128,10 @@ export const result = query({
 
 // Вызывается только с сервера: сейчас имитацией оплаты, позже вебхуком провайдера.
 export const markPaid = internalMutation({
-  args: { attemptId: v.id("attempts") },
+  args: { attemptId: v.id("attempts"), email: v.string() },
   returns: v.null(),
-  handler: async (ctx, { attemptId }) => {
-    await ctx.db.patch(attemptId, { paid: true });
+  handler: async (ctx, { attemptId, email }) => {
+    await ctx.db.patch(attemptId, { paid: true, email });
     return null;
   },
 });

@@ -47,6 +47,7 @@ export const checkout = mutation({
     });
     await ctx.runMutation(internal.attempts.markPaid, {
       attemptId: attempt._id,
+      email: normalizedEmail,
     });
     return null;
   },
