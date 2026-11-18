@@ -13,7 +13,7 @@ import {
   SparkIcon,
 } from "@/components/icons";
 import { MatrixPuzzle } from "@/components/MatrixPuzzle";
-import { SkillRadar } from "@/components/SkillRadar";
+import { SkillCard } from "@/components/SkillCard";
 import { TrackEvent } from "@/components/TrackEvent";
 import { buttonClass, Card, Header } from "@/components/ui";
 
@@ -55,8 +55,8 @@ const STEPS = [
 
 const SKILLS = [
   { title: "Логика", text: "Выводы из условий и задачи с подвохом.", value: 86 },
-  { title: "Числа", text: "Закономерности в числовых рядах.", value: 71 },
-  { title: "Вербальное мышление", text: "Аналогии и связи между понятиями.", value: 67 },
+  { title: "Числа", text: "Закономерности в числовых рядах.", value: 68 },
+  { title: "Вербальное мышление", text: "Аналогии и связи между понятиями.", value: 47 },
 ];
 
 const FAQ = [
@@ -249,41 +249,25 @@ export default function LandingPage() {
           </ol>
         </section>
 
-        <section className="grid items-center gap-8 rounded-[2rem] bg-accent p-6 text-white sm:p-10 lg:grid-cols-2 lg:gap-12">
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-3">
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Что вы узнаете</h2>
-              <p className="text-lg text-white/75">
-                Не только общий балл, но и то, какие навыки мышления у вас развиты
-                сильнее остальных.
-              </p>
-            </div>
-            <ul className="flex flex-col">
+        <section className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
+          <SectionTitle sub="Не только общий балл, но и то, какие навыки мышления у вас развиты сильнее остальных.">
+            Что вы узнаете
+          </SectionTitle>
+          <div className="rounded-[2rem] bg-gradient-to-br from-accent-soft to-highlight/40 p-4 sm:p-6">
+            <div className="flex flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[0_24px_60px_-30px_rgba(21,22,28,0.35)] sm:p-5">
+              <div className="flex items-center justify-between gap-3">
+                <p className="font-bold">Ваш профиль мышления</p>
+                <span className="text-xs font-semibold text-muted">Пример</span>
+              </div>
               {SKILLS.map((skill) => (
-                <li
+                <SkillCard
                   key={skill.title}
-                  className="flex items-center gap-4 border-t border-white/20 py-4 last:border-b"
-                >
-                  <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white/15">
-                    <CategoryIcon category={skill.title} />
-                  </span>
-                  <div className="flex-1">
-                    <h3 className="font-bold">{skill.title}</h3>
-                    <p className="text-sm text-white/70">{skill.text}</p>
-                  </div>
-                  <span className="text-3xl font-extrabold tabular-nums text-highlight">
-                    {skill.value}
-                    <span className="text-lg">%</span>
-                  </span>
-                </li>
+                  title={skill.title}
+                  score={skill.value}
+                  text={skill.text}
+                />
               ))}
-            </ul>
-          </div>
-          <div className="mx-auto flex w-full max-w-sm flex-col gap-2">
-            <SkillRadar values={[SKILLS[0].value, SKILLS[1].value, SKILLS[2].value]} />
-            <p className="text-center text-xs text-white/60">
-              Пример разбора. Ваши цифры будут другими.
-            </p>
+            </div>
           </div>
         </section>
 

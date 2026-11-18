@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { api } from "../../../convex/_generated/api";
 import { BellCurve } from "@/components/BellCurve";
-import { CategoryIcon } from "@/components/categoryIcon";
+import { SkillCard } from "@/components/SkillCard";
 import { TrackEvent } from "@/components/TrackEvent";
-import { buttonGhostClass, Card, Header, Loading, ProgressBar, Screen } from "@/components/ui";
+import { buttonGhostClass, Card, Header, Loading, Screen } from "@/components/ui";
 import { iqLevel } from "@/lib/level";
 import { PLAN_KEY, TOKEN_KEY, writeStored } from "@/lib/storage";
 import { useCountUp } from "@/lib/useCountUp";
@@ -47,28 +47,16 @@ function Skills({ categories }: { categories: Category[] }) {
       <p className="mb-5 mt-1 text-muted">
         Ваша сильная сторона — <span className="font-bold text-foreground">{best.category.toLowerCase()}</span>.
       </p>
-      <ul className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3">
         {categories.map((c) => (
-          <li key={c.category} className="flex items-center gap-4">
-            <span
-              className={`grid size-11 shrink-0 place-items-center rounded-2xl ${
-                c === best ? "bg-foreground text-highlight" : "bg-accent-soft text-accent"
-              }`}
-            >
-              <CategoryIcon category={c.category} />
-            </span>
-            <div className="flex flex-1 flex-col gap-2">
-              <div className="flex items-baseline justify-between gap-3 font-semibold">
-                <span>{c.category}</span>
-                <span className="text-sm tabular-nums text-muted">
-                  {c.correct} из {c.total}
-                </span>
-              </div>
-              <ProgressBar value={(c.correct / c.total) * 100} />
-            </div>
-          </li>
+          <SkillCard
+            key={c.category}
+            title={c.category}
+            score={Math.round((c.correct / c.total) * 100)}
+            text={`Верных ответов: ${c.correct} из ${c.total}`}
+          />
         ))}
-      </ul>
+      </div>
     </Card>
   );
 }
