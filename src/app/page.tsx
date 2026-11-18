@@ -206,11 +206,11 @@ export default function LandingPage() {
                 <ArrowIcon />
               </Link>
             </div>
-            <ul className="flex flex-wrap gap-2">
+            <ul className="flex flex-wrap gap-x-5 gap-y-2">
               {FACTS.map(({ icon: Icon, label }) => (
                 <li
                   key={label}
-                  className="flex items-center gap-2 rounded-full bg-surface px-3.5 py-2 text-sm font-semibold shadow-[0_0_0_1px_var(--color-border)]"
+                  className="flex items-center gap-1.5 text-sm font-medium text-muted"
                 >
                   <Icon className="size-4 text-accent" />
                   {label}
