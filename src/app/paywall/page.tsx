@@ -56,7 +56,7 @@ export default function PaywallPage() {
         <TrackEvent name="paywall_view" />
 
         <div className="flex animate-rise flex-col gap-2">
-          <h1 className="text-3xl font-extrabold tracking-tight">Ваш результат готов</h1>
+          <h1 className="font-display text-2xl font-bold tracking-tight">Ваш результат готов</h1>
           <p className="text-muted">
             Вы ответили на {attempt.answered} из {attempt.total} вопросов за{" "}
             {formatDuration(attempt.durationSec ?? 0)}.
@@ -66,7 +66,7 @@ export default function PaywallPage() {
         <Card className="relative animate-rise overflow-hidden [animation-delay:80ms]">
           <p className="text-sm font-semibold text-muted">Ваш IQ</p>
           {/* Заглушка: настоящий балл в браузер до оплаты не передаётся. */}
-          <p aria-hidden className="select-none text-6xl font-extrabold tracking-tight blur-md">
+          <p aria-hidden className="select-none font-display text-5xl font-bold tracking-tight blur-md">
             000
           </p>
           <div className="mt-2 opacity-60">

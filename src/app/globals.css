@@ -2,6 +2,7 @@
 
 @theme inline {
   --font-sans: var(--font-manrope), system-ui, sans-serif;
+  --font-display: var(--font-unbounded), var(--font-manrope), sans-serif;
 }
 
 @theme {

@@ -1,10 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from "next/font/google";
+import { Manrope, Unbounded } from "next/font/google";
 import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import "./globals.css";
 
 const manrope = Manrope({
   variable: "--font-manrope",
+  subsets: ["latin", "cyrillic"],
+});
+
+// Акцидентный шрифт для заголовков и крупных чисел; основной текст — Manrope.
+const unbounded = Unbounded({
+  variable: "--font-unbounded",
   subsets: ["latin", "cyrillic"],
 });
 
@@ -22,7 +28,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ru" className={`${manrope.variable} h-full antialiased`}>
+    <html lang="ru" className={`${manrope.variable} ${unbounded.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <ConvexClientProvider>{children}</ConvexClientProvider>
       </body>

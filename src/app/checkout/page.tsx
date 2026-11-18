@@ -76,7 +76,7 @@ export default function CheckoutPage() {
             <span className="grid size-16 place-items-center rounded-full bg-foreground text-highlight">
               <CheckIcon className="size-8" />
             </span>
-            <h1 className="text-2xl font-extrabold tracking-tight">Оплата прошла</h1>
+            <h1 className="font-display text-xl font-bold tracking-tight">Оплата прошла</h1>
             <p className="text-muted">Открываем ваш результат…</p>
           </div>
         </Screen>
@@ -98,7 +98,7 @@ export default function CheckoutPage() {
           Изменить тариф
         </Link>
 
-        <h1 className="text-3xl font-extrabold tracking-tight">Оплата</h1>
+        <h1 className="font-display text-2xl font-bold tracking-tight">Оплата</h1>
 
         <Card>
           <div className="flex items-baseline justify-between gap-3 text-lg font-bold">

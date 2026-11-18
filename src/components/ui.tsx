@@ -9,7 +9,7 @@ export const buttonGhostClass = `${buttonBase} border border-border bg-surface t
 
 export function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-2 text-lg font-extrabold tracking-tight">
+    <Link href="/" className="flex items-center gap-2 font-display text-base font-bold tracking-tight">
       <span className="grid size-8 place-items-center rounded-xl bg-foreground text-sm text-highlight">
         IQ
       </span>

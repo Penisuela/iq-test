@@ -30,7 +30,7 @@ export function Footer() {
       <div className="mx-auto grid w-full max-w-5xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
         {COLUMNS.map((column) => (
           <div key={column.title} className="flex flex-col gap-2">
-            <h2 className="font-bold">{column.title}</h2>
+            <h3 className="font-bold">{column.title}</h3>
             <ul className="flex flex-col gap-1.5 text-sm text-white/60">
               {column.items.map((item) => (
                 <li key={item.label}>

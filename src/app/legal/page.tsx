@@ -32,7 +32,7 @@ export default function LegalPage() {
       <Header />
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8 px-4 pb-16 pt-6">
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-extrabold tracking-tight">Документы</h1>
+          <h1 className="font-display text-2xl font-bold tracking-tight">Документы</h1>
           <p className="text-muted">
             Mindmark — демонстрационный проект. Ниже краткие версии документов.
           </p>

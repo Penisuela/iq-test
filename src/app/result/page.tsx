@@ -25,7 +25,7 @@ function Score({ iq, percentile }: { iq: number; percentile: number }) {
         <p className="text-sm font-semibold text-muted">Ваш IQ</p>
         <span className="rounded-full bg-highlight px-3 py-1 text-xs font-bold">{level.title}</span>
       </div>
-      <p className="text-7xl font-extrabold tabular-nums tracking-tight">{shown}</p>
+      <p className="font-display text-6xl font-bold tabular-nums tracking-tight">{shown}</p>
       <p className="mb-3 text-muted">
         Выше, чем у <span className="font-bold text-foreground">{percentile}%</span>{" "}
         участников

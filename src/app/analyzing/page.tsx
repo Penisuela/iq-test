@@ -48,8 +48,8 @@ export default function AnalyzingPage() {
       <Screen>
         <div className="flex flex-1 flex-col justify-center gap-8 py-10">
           <div className="flex flex-col gap-3">
-            <p className="text-6xl font-extrabold tabular-nums tracking-tight">{percent}%</p>
-            <h1 className="text-2xl font-extrabold tracking-tight">Считаем ваш результат</h1>
+            <p className="font-display text-5xl font-bold tabular-nums tracking-tight">{percent}%</p>
+            <h1 className="font-display text-xl font-bold tracking-tight">Считаем ваш результат</h1>
             <ProgressBar value={percent} />
           </div>
 
