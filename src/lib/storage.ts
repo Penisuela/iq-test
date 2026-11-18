@@ -3,6 +3,8 @@
 import { useSyncExternalStore } from "react";
 
 export const TOKEN_KEY = "iq-attempt-token";
+// Токен последней оплаченной попытки: по нему сервер узнаёт подписчика при повторном прохождении.
+export const SUBSCRIBER_KEY = "iq-subscriber-token";
 
 const listeners = new Set<() => void>();
 

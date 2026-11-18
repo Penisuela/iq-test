@@ -5,12 +5,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { Figure } from "@/components/Figure";
-import { ArrowIcon } from "@/components/icons";
 import { Matrix } from "@/components/Matrix";
 import { Timer } from "@/components/Timer";
 import { buttonClass, Header, Loading, ProgressBar, Screen } from "@/components/ui";
 import { errorMessage } from "@/lib/errors";
-import { readStored, TOKEN_KEY, useStored, writeStored } from "@/lib/storage";
+import { readStored, SUBSCRIBER_KEY, TOKEN_KEY, useStored, writeStored } from "@/lib/storage";
 
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
 // Пауза, чтобы человек увидел выбранный вариант перед переходом.
@@ -42,7 +41,7 @@ export default function QuizPage() {
   useEffect(() => {
     if (token !== null || starting.current || readStored(TOKEN_KEY)) return;
     starting.current = true;
-    start()
+    start({ previousToken: readStored(SUBSCRIBER_KEY) ?? undefined })
       .then(({ token }) => {
         writeStored(TOKEN_KEY, token);
         void track({ name: "quiz_start", token });
@@ -146,10 +145,10 @@ export default function QuizPage() {
                   aria-label={`Вопрос ${i + 1}${isAnswered ? ", ответ выбран" : ""}`}
                   className={`grid h-9 place-items-center rounded-lg text-xs font-bold tabular-nums transition ${
                     isCurrent
-                      ? "bg-foreground text-white"
+                      ? "bg-accent text-white"
                       : isAnswered
                         ? "bg-accent-soft text-accent"
-                        : "bg-surface text-muted shadow-[0_0_0_1px_var(--color-border)]"
+                        : "bg-surface text-muted"
                   }`}
                 >
                   {i + 1}
@@ -159,8 +158,11 @@ export default function QuizPage() {
           </nav>
         </div>
 
-        <div key={question.id} className="flex animate-rise flex-col gap-5 md:gap-8">
-          <h1 className="py-2 text-2xl font-extrabold leading-snug tracking-tight md:text-3xl">
+        <div
+          key={question.id}
+          className="flex animate-rise flex-col gap-5 rounded-[2rem] bg-accent-soft p-4 sm:p-6 md:gap-8 md:p-8"
+        >
+          <h1 className="text-2xl font-extrabold leading-snug tracking-tight md:text-3xl">
             {question.prompt}
           </h1>
 
@@ -171,7 +173,7 @@ export default function QuizPage() {
             }
           >
             {question.matrix && (
-              <div className="mx-auto w-full max-w-[17rem] shrink-0 rounded-3xl border border-border bg-surface p-4 md:mx-0 md:max-w-xs">
+              <div className="mx-auto w-full max-w-[17rem] shrink-0 rounded-3xl bg-surface p-4 md:mx-0 md:max-w-xs">
                 <Matrix cells={question.matrix} />
               </div>
             )}
@@ -197,8 +199,8 @@ export default function QuizPage() {
                       isFigure ? "relative p-3" : "flex min-h-16 items-center gap-4 px-4 py-3"
                     } ${
                       isSelected
-                        ? "border-accent bg-accent-soft"
-                        : "border-transparent bg-surface shadow-[0_0_0_1px_var(--color-border)] hover:shadow-[0_0_0_1px_var(--color-foreground)]"
+                        ? "border-accent bg-surface"
+                        : "border-transparent bg-surface hover:border-accent/40"
                     }`}
                   >
                     <span
@@ -234,7 +236,6 @@ export default function QuizPage() {
               className={`${buttonClass} pointer-events-auto shadow-[0_14px_30px_-8px_var(--color-accent)]`}
             >
               {finishing ? "Завершаем…" : "Завершить тест"}
-              {!finishing && <ArrowIcon />}
             </button>
           </div>
         </div>

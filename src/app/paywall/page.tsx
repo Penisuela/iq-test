@@ -6,24 +6,18 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { api } from "../../../convex/_generated/api";
 import { BellCurve } from "@/components/BellCurve";
-import {
-  ArrowIcon,
-  ChartIcon,
-  ListIcon,
-  LockIcon,
-  LogicIcon,
-  SparkIcon,
-} from "@/components/icons";
+import { CheckIcon, LockIcon } from "@/components/icons";
 import { TrackEvent } from "@/components/TrackEvent";
-import { buttonClass, Card, Header, Loading, Screen } from "@/components/ui";
+import { buttonClass, Card, Header, Loading, Screen, Tint } from "@/components/ui";
 import { formatDuration } from "@/lib/level";
 import { useFinishedAttempt } from "@/lib/useAttempt";
 
 const INCLUDED = [
-  { icon: SparkIcon, label: "Точный балл IQ по шкале со средним 100" },
-  { icon: ChartIcon, label: "Ваше место среди других участников" },
-  { icon: LogicIcon, label: "Разбор по трём навыкам мышления" },
-  { icon: ListIcon, label: "Пояснение, что значит ваш результат" },
+  "Точный балл IQ по шкале со средним 100",
+  "Ваше место среди других участников",
+  "Разбор по трём навыкам мышления",
+  "Пояснение, что значит ваш результат",
+  "Повторные попытки без доплаты, пока активна подписка",
 ];
 
 export default function PaywallPage() {
@@ -60,46 +54,50 @@ export default function PaywallPage() {
           </p>
         </div>
 
-        <Card className="relative animate-rise overflow-hidden [animation-delay:80ms]">
-          <p className="text-sm font-semibold text-muted">Ваш IQ</p>
-          {/* Заглушка: настоящий балл в браузер до оплаты не передаётся. */}
-          <p aria-hidden className="select-none font-display text-5xl font-bold tracking-tight blur-md">
-            000
-          </p>
-          <div className="mt-2 opacity-60">
-            <BellCurve />
-          </div>
-          <div className="absolute inset-0 grid place-items-center bg-surface/40">
-            <span className="flex items-center gap-2 rounded-full bg-foreground px-4 py-2.5 text-sm font-bold text-white shadow-lg">
-              <LockIcon className="size-4 text-highlight" />
-              Результат скрыт
-            </span>
-          </div>
-        </Card>
+        <Tint className="animate-rise [animation-delay:80ms]">
+          <Card className="relative overflow-hidden">
+            <p className="text-sm font-semibold text-muted">Ваш IQ</p>
+            {/* Заглушка: настоящий балл в браузер до оплаты не передаётся. */}
+            <p
+              aria-hidden
+              className="select-none font-display text-5xl font-bold tracking-tight text-accent blur-md"
+            >
+              000
+            </p>
+            <div className="mt-2 opacity-60">
+              <BellCurve />
+            </div>
+            <div className="absolute inset-0 grid place-items-center bg-surface/40">
+              <span className="flex items-center gap-2 rounded-full bg-accent px-4 py-2.5 text-sm font-bold text-white shadow-[0_10px_24px_-10px_var(--color-accent)]">
+                <LockIcon className="size-4" />
+                Результат скрыт
+              </span>
+            </div>
+          </Card>
+        </Tint>
 
-        <Card>
-          <h2 className="mb-3 text-lg font-bold">Что вы получите</h2>
-          <ul className="flex flex-col gap-3">
-            {INCLUDED.map(({ icon: Icon, label }) => (
-              <li key={label} className="flex items-center gap-3 font-medium">
-                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent">
-                  <Icon />
+        <Tint className="gap-5 sm:p-6">
+          <h2 className="px-1 font-display text-lg font-bold tracking-tight">Что вы получите</h2>
+          <ul className="flex flex-col gap-4 px-1">
+            {INCLUDED.map((label) => (
+              <li key={label} className="flex gap-3 font-medium">
+                <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-accent text-white">
+                  <CheckIcon className="size-3.5" />
                 </span>
                 {label}
               </li>
             ))}
           </ul>
-        </Card>
+        </Tint>
 
         {/* Отступ под закреплённую кнопку. */}
         <div className="h-24" />
       </Screen>
 
-      <div className="fixed inset-x-0 bottom-0 border-t border-border bg-background/90 backdrop-blur">
+      <div className="fixed inset-x-0 bottom-0 bg-background/95 backdrop-blur">
         <div className="mx-auto flex w-full max-w-md flex-col gap-2 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
           <Link href="/checkout" className={buttonClass}>
             Открыть результат за {offer.price} ₽
-            <ArrowIcon />
           </Link>
           <p className="text-center text-sm text-muted">{offer.terms}</p>
         </div>

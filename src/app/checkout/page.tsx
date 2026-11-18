@@ -7,14 +7,14 @@ import { useEffect, useState, type FormEvent } from "react";
 import { api } from "../../../convex/_generated/api";
 import { BackIcon, CheckIcon, LockIcon } from "@/components/icons";
 import { TrackEvent } from "@/components/TrackEvent";
-import { buttonClass, Card, Header, Loading, Screen } from "@/components/ui";
+import { buttonClass, Card, Header, Loading, Screen, Tint } from "@/components/ui";
 import { errorMessage } from "@/lib/errors";
 import { useFinishedAttempt } from "@/lib/useAttempt";
 
 const fieldBase =
-  "h-14 w-full rounded-2xl border border-border px-4 text-base font-medium outline-none transition";
+  "h-14 w-full rounded-2xl border-2 border-transparent px-4 text-base font-medium outline-none transition";
 const fieldClass = `${fieldBase} bg-surface placeholder:font-normal placeholder:text-muted/70 focus:border-accent`;
-const demoFieldClass = `${fieldBase} bg-background text-muted`;
+const demoFieldClass = `${fieldBase} bg-surface/60 text-muted`;
 const SUCCESS_DELAY_MS = 900;
 
 export default function CheckoutPage() {
@@ -70,7 +70,7 @@ export default function CheckoutPage() {
         <Header />
         <Screen>
           <div className="flex flex-1 animate-rise flex-col items-center justify-center gap-4 py-24 text-center">
-            <span className="grid size-16 place-items-center rounded-full bg-foreground text-highlight">
+            <span className="grid size-16 place-items-center rounded-full bg-accent text-white">
               <CheckIcon className="size-8" />
             </span>
             <h1 className="font-display text-xl font-bold tracking-tight">Оплата прошла</h1>
@@ -97,15 +97,17 @@ export default function CheckoutPage() {
 
         <h1 className="font-display text-2xl font-bold tracking-tight">Оплата</h1>
 
-        <Card>
-          <div className="flex items-baseline justify-between gap-3 text-lg font-bold">
-            <span>{offer.title}</span>
-            <span>{offer.price} ₽</span>
-          </div>
-          <p className="mt-1 text-sm text-muted">{offer.terms}</p>
-        </Card>
+        <Tint>
+          <Card>
+            <div className="flex items-baseline justify-between gap-3 text-lg font-bold">
+              <span>{offer.title}</span>
+              <span className="text-accent">{offer.price} ₽</span>
+            </div>
+            <p className="mt-1 text-sm text-muted">{offer.terms}</p>
+          </Card>
+        </Tint>
 
-        <form onSubmit={pay} className="flex flex-col gap-4">
+        <form onSubmit={pay} className="flex flex-col gap-4 rounded-[2rem] bg-accent-soft p-4 sm:p-6">
           <label className="flex flex-col gap-2 text-sm font-semibold">
             Email
             <input

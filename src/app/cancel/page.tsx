@@ -6,7 +6,13 @@ import { useState, type FormEvent } from "react";
 import { api } from "../../../convex/_generated/api";
 import { Footer } from "@/components/Footer";
 import { CheckIcon } from "@/components/icons";
-import { buttonClass, buttonGhostClass, Card, Header } from "@/components/ui";
+import {
+  buttonClass,
+  buttonGhostClass,
+  Card,
+  Header,
+  Tint,
+} from "@/components/ui";
 import { errorMessage } from "@/lib/errors";
 
 export default function CancelPage() {
@@ -43,42 +49,55 @@ export default function CancelPage() {
         </div>
 
         {status === "done" ? (
-          <Card className="flex animate-rise flex-col items-center gap-4 text-center">
-            <span className="grid size-14 place-items-center rounded-full bg-foreground text-highlight">
-              <CheckIcon className="size-7" />
-            </span>
-            <p className="text-lg font-bold">Подписка отменена</p>
-            <p className="text-muted">
-              Если на <span className="font-semibold text-foreground">{email.trim()}</span>{" "}
-              была оформлена подписка, продление отключено. Доступ к результату сохранится
-              до конца оплаченного периода.
-            </p>
-            <Link href="/" className={buttonGhostClass}>
-              На главную
-            </Link>
-          </Card>
+          <Tint className="animate-rise">
+            <Card className="flex flex-col items-center gap-4 text-center">
+              <span className="grid size-14 place-items-center rounded-full bg-accent text-white">
+                <CheckIcon className="size-7" />
+              </span>
+              <p className="text-lg font-bold">Подписка отменена</p>
+              <p className="text-muted">
+                Если на{" "}
+                <span className="font-semibold text-foreground">
+                  {email.trim()}
+                </span>{" "}
+                была оформлена подписка, продление отключено. Доступ к
+                результату сохранится до конца оплаченного периода.
+              </p>
+              <Link href="/" className={buttonGhostClass}>
+                На главную
+              </Link>
+            </Card>
+          </Tint>
         ) : (
-          <Card>
-            <form onSubmit={submit} className="flex flex-col gap-4">
-              <label className="flex flex-col gap-2 text-sm font-semibold">
-                Email
-                <input
-                  type="email"
-                  required
-                  autoComplete="email"
-                  inputMode="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-14 w-full rounded-2xl border border-border bg-surface px-4 text-base font-medium outline-none transition placeholder:font-normal placeholder:text-muted/70 focus:border-accent"
-                />
-              </label>
-              {error && <p className="text-sm font-medium text-danger">{error}</p>}
-              <button type="submit" disabled={status === "pending"} className={buttonClass}>
-                {status === "pending" ? "Отменяем…" : "Отменить подписку"}
-              </button>
-            </form>
-          </Card>
+          <Tint>
+            <Card>
+              <form onSubmit={submit} className="flex flex-col gap-4">
+                <label className="flex flex-col gap-2 text-sm font-semibold">
+                  Email
+                  <input
+                    type="email"
+                    required
+                    autoComplete="email"
+                    inputMode="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="h-14 w-full rounded-2xl border-2 border-transparent bg-background px-4 text-base font-medium outline-none transition placeholder:font-normal placeholder:text-muted/70 focus:border-accent"
+                  />
+                </label>
+                {error && (
+                  <p className="text-sm font-medium text-danger">{error}</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={status === "pending"}
+                  className={buttonClass}
+                >
+                  {status === "pending" ? "Отменяем…" : "Отменить подписку"}
+                </button>
+              </form>
+            </Card>
+          </Tint>
         )}
       </main>
       <Footer />
