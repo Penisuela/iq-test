@@ -4,7 +4,6 @@ import { useMutation, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
-import { CategoryIcon } from "@/components/categoryIcon";
 import { Figure } from "@/components/Figure";
 import { BackIcon } from "@/components/icons";
 import { Matrix } from "@/components/Matrix";
@@ -102,15 +101,9 @@ export default function QuizPage() {
       </Header>
       <Screen>
         <div className="flex flex-col gap-2.5">
-          <div className="flex items-center justify-between text-sm font-semibold">
-            <span className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-accent">
-              <CategoryIcon category={question.category} className="size-4" />
-              {question.category}
-            </span>
-            <span className="tabular-nums text-muted">
-              {index + 1} из {questions.length}
-            </span>
-          </div>
+          <p className="text-sm font-semibold tabular-nums text-muted">
+            Вопрос {index + 1} из {questions.length}
+          </p>
           <ProgressBar value={((index + 1) / questions.length) * 100} />
         </div>
 
