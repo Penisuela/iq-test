@@ -9,7 +9,6 @@ import { BackIcon, CheckIcon, LockIcon } from "@/components/icons";
 import { TrackEvent } from "@/components/TrackEvent";
 import { buttonClass, Card, Header, Loading, Screen } from "@/components/ui";
 import { errorMessage } from "@/lib/errors";
-import { PLAN_KEY, useStored } from "@/lib/storage";
 import { useFinishedAttempt } from "@/lib/useAttempt";
 
 const fieldBase =
@@ -21,8 +20,7 @@ const SUCCESS_DELAY_MS = 900;
 export default function CheckoutPage() {
   const router = useRouter();
   const state = useFinishedAttempt();
-  const plans = useQuery(api.payments.plans);
-  const storedPlan = useStored(PLAN_KEY);
+  const offer = useQuery(api.payments.offer);
   const checkout = useMutation(api.payments.checkout);
   const track = useMutation(api.events.track);
 
@@ -41,7 +39,7 @@ export default function CheckoutPage() {
     return () => window.clearTimeout(id);
   }, [paid, status, router]);
 
-  if (!state || !plans || (paid && status === "idle")) {
+  if (!state || !offer || (paid && status === "idle")) {
     return (
       <>
         <Header />
@@ -51,14 +49,13 @@ export default function CheckoutPage() {
   }
 
   const { token } = state;
-  const plan = plans.find((p) => p.id === storedPlan) ?? plans[0];
 
   async function pay(event: FormEvent) {
     event.preventDefault();
     setStatus("pending");
     setError(null);
     try {
-      await checkout({ token, planId: plan.id, email });
+      await checkout({ token, email });
       void track({ name: "payment_success", token });
       setStatus("success");
     } catch (e) {
@@ -95,17 +92,17 @@ export default function CheckoutPage() {
           className="flex items-center gap-2 self-start text-sm font-semibold text-muted transition hover:text-foreground"
         >
           <BackIcon className="size-4" />
-          Изменить тариф
+          Назад
         </Link>
 
         <h1 className="font-display text-2xl font-bold tracking-tight">Оплата</h1>
 
         <Card>
           <div className="flex items-baseline justify-between gap-3 text-lg font-bold">
-            <span>{plan.title}</span>
-            <span>{plan.price} ₽</span>
+            <span>{offer.title}</span>
+            <span>{offer.price} ₽</span>
           </div>
-          <p className="mt-1 text-sm text-muted">{plan.terms}</p>
+          <p className="mt-1 text-sm text-muted">{offer.terms}</p>
         </Card>
 
         <form onSubmit={pay} className="flex flex-col gap-4">
@@ -164,7 +161,7 @@ export default function CheckoutPage() {
 
           <button type="submit" disabled={status === "pending"} className={buttonClass}>
             <LockIcon className="size-4" />
-            {status === "pending" ? "Оплачиваем…" : `Оплатить ${plan.price} ₽`}
+            {status === "pending" ? "Оплачиваем…" : `Оплатить ${offer.price} ₽`}
           </button>
         </form>
       </Screen>

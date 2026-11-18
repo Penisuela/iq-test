@@ -17,7 +17,6 @@ import {
 import { TrackEvent } from "@/components/TrackEvent";
 import { buttonClass, Card, Header, Loading, Screen } from "@/components/ui";
 import { formatDuration } from "@/lib/level";
-import { PLAN_KEY, useStored, writeStored } from "@/lib/storage";
 import { useFinishedAttempt } from "@/lib/useAttempt";
 
 const INCLUDED = [
@@ -30,14 +29,13 @@ const INCLUDED = [
 export default function PaywallPage() {
   const router = useRouter();
   const state = useFinishedAttempt();
-  const plans = useQuery(api.payments.plans);
-  const storedPlan = useStored(PLAN_KEY);
+  const offer = useQuery(api.payments.offer);
 
   useEffect(() => {
     if (state?.attempt.paid) router.replace("/result");
   }, [state?.attempt.paid, router]);
 
-  if (!state || !plans || state.attempt.paid) {
+  if (!state || !offer || state.attempt.paid) {
     return (
       <>
         <Header />
@@ -47,7 +45,6 @@ export default function PaywallPage() {
   }
 
   const { attempt } = state;
-  const plan = plans.find((p) => p.id === storedPlan) ?? plans[0];
 
   return (
     <>
@@ -94,58 +91,17 @@ export default function PaywallPage() {
           </ul>
         </Card>
 
-        <fieldset className="flex flex-col gap-3">
-          <legend className="mb-3 text-lg font-bold">Выберите тариф</legend>
-          {plans.map((p) => {
-            const active = p.id === plan.id;
-            return (
-              <label
-                key={p.id}
-                className={`flex cursor-pointer gap-3 rounded-2xl border-2 bg-surface p-4 transition has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent ${
-                  active ? "border-accent" : "border-border"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="plan"
-                  className="sr-only"
-                  checked={active}
-                  onChange={() => writeStored(PLAN_KEY, p.id)}
-                />
-                <span
-                  className={`mt-1 grid size-5 shrink-0 place-items-center rounded-full border-2 ${
-                    active ? "border-accent" : "border-border"
-                  }`}
-                >
-                  {active && <span className="size-2.5 rounded-full bg-accent" />}
-                </span>
-                <span className="flex flex-1 flex-col gap-1">
-                  <span className="flex items-baseline justify-between gap-3 text-lg font-bold">
-                    <span>{p.title}</span>
-                    <span>{p.price} ₽</span>
-                  </span>
-                  <span className="text-sm text-muted">{p.terms}</span>
-                </span>
-              </label>
-            );
-          })}
-        </fieldset>
-
         {/* Отступ под закреплённую кнопку. */}
         <div className="h-24" />
       </Screen>
 
       <div className="fixed inset-x-0 bottom-0 border-t border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex w-full max-w-md flex-col gap-2 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
-          <Link
-            href="/checkout"
-            onClick={() => writeStored(PLAN_KEY, plan.id)}
-            className={buttonClass}
-          >
-            Открыть результат за {plan.price} ₽
+          <Link href="/checkout" className={buttonClass}>
+            Открыть результат за {offer.price} ₽
             <ArrowIcon />
           </Link>
-          <p className="text-center text-xs text-muted">{plan.terms}</p>
+          <p className="text-center text-sm text-muted">{offer.terms}</p>
         </div>
       </div>
     </>

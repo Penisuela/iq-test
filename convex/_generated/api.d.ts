@@ -11,7 +11,7 @@
 import type * as attempts from "../attempts.js";
 import type * as events from "../events.js";
 import type * as lib_attempt from "../lib/attempt.js";
-import type * as lib_plans from "../lib/plans.js";
+import type * as lib_offer from "../lib/offer.js";
 import type * as lib_questionBank from "../lib/questionBank.js";
 import type * as lib_scoring from "../lib/scoring.js";
 import type * as payments from "../payments.js";
@@ -27,7 +27,7 @@ declare const fullApi: ApiFromModules<{
   attempts: typeof attempts;
   events: typeof events;
   "lib/attempt": typeof lib_attempt;
-  "lib/plans": typeof lib_plans;
+  "lib/offer": typeof lib_offer;
   "lib/questionBank": typeof lib_questionBank;
   "lib/scoring": typeof lib_scoring;
   payments: typeof payments;

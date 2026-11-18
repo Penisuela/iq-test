@@ -22,7 +22,6 @@ export default defineSchema({
 
   payments: defineTable({
     attemptId: v.id("attempts"),
-    planId: v.string(),
     amount: v.number(),
     currency: v.string(),
     email: v.string(),

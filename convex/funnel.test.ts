@@ -39,7 +39,13 @@ describe("попытка", () => {
     const { token } = await t.mutation(api.attempts.start, {});
     await t.mutation(api.attempts.answer, { token, questionId: "n1", option: 0 });
     await t.mutation(api.attempts.answer, { token, questionId: "n1", option: 3 });
-    expect((await t.query(api.attempts.paywall, { token })).answered).toBe(1);
+    expect((await t.query(api.attempts.paywall, { token }))?.answered).toBe(1);
+  });
+
+  test("неизвестный токен не роняет запросы", async () => {
+    const t = convexTest(schema, modules);
+    expect(await t.query(api.attempts.paywall, { token: "старый" })).toBeNull();
+    expect(await t.query(api.attempts.result, { token: "старый" })).toEqual({ locked: true });
   });
 
   test("несуществующий вариант и чужой токен отклоняются", async () => {
@@ -74,11 +80,7 @@ describe("paywall", () => {
 
   test("оплата открывает результат и сохраняется в базе", async () => {
     const { t, token } = await finishedAttempt();
-    await t.mutation(api.payments.checkout, {
-      token,
-      planId: "trial",
-      email: " User@Example.com ",
-    });
+    await t.mutation(api.payments.checkout, { token, email: " User@Example.com " });
 
     const result = await t.query(api.attempts.result, { token });
     expect(result).toMatchObject({ locked: false, iq: 138, percentile: 99 });
@@ -86,7 +88,6 @@ describe("paywall", () => {
     const payments = await t.run((ctx) => ctx.db.query("payments").collect());
     expect(payments).toHaveLength(1);
     expect(payments[0]).toMatchObject({
-      planId: "trial",
       amount: 49,
       email: "user@example.com",
       status: "succeeded",
@@ -95,23 +96,21 @@ describe("paywall", () => {
 
   test("повторная оплата не создаёт второй платёж", async () => {
     const { t, token } = await finishedAttempt();
-    const args = { token, planId: "single", email: "a@b.ru" };
+    const args = { token, email: "a@b.ru" };
     await t.mutation(api.payments.checkout, args);
     await t.mutation(api.payments.checkout, args);
     const payments = await t.run((ctx) => ctx.db.query("payments").collect());
     expect(payments).toHaveLength(1);
   });
 
-  test("нельзя оплатить незавершённый тест, неизвестный тариф или с плохим email", async () => {
+  test("нельзя оплатить незавершённый тест или с плохим email", async () => {
     const t = convexTest(schema, modules);
     const { token } = await t.mutation(api.attempts.start, {});
-    const pay = (planId: string, email: string) =>
-      t.mutation(api.payments.checkout, { token, planId, email });
+    const pay = (email: string) => t.mutation(api.payments.checkout, { token, email });
 
-    await expect(pay("trial", "a@b.ru")).rejects.toThrow();
+    await expect(pay("a@b.ru")).rejects.toThrow();
     await t.mutation(api.attempts.finish, { token });
-    await expect(pay("unknown", "a@b.ru")).rejects.toThrow();
-    await expect(pay("trial", "не email")).rejects.toThrow();
+    await expect(pay("не email")).rejects.toThrow();
     expect(await t.query(api.attempts.result, { token })).toEqual({ locked: true });
   });
 });

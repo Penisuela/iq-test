@@ -9,7 +9,7 @@ import { SkillCard } from "@/components/SkillCard";
 import { TrackEvent } from "@/components/TrackEvent";
 import { buttonGhostClass, Card, Header, Loading, Screen } from "@/components/ui";
 import { iqLevel } from "@/lib/level";
-import { PLAN_KEY, TOKEN_KEY, writeStored } from "@/lib/storage";
+import { TOKEN_KEY, writeStored } from "@/lib/storage";
 import { useCountUp } from "@/lib/useCountUp";
 import { useFinishedAttempt } from "@/lib/useAttempt";
 
@@ -83,7 +83,6 @@ export default function ResultPage() {
   }
 
   function retake() {
-    writeStored(PLAN_KEY, null);
     writeStored(TOKEN_KEY, null);
     router.push("/quiz");
   }

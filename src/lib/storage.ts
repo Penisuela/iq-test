@@ -3,7 +3,6 @@
 import { useSyncExternalStore } from "react";
 
 export const TOKEN_KEY = "iq-attempt-token";
-export const PLAN_KEY = "iq-plan";
 
 const listeners = new Set<() => void>();
 
