@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowIcon } from "@/components/icons";
 import { StartLink } from "@/components/StartLink";
 import { buttonClass } from "@/components/ui";
 
@@ -40,7 +39,6 @@ export function StickyStart() {
         className={`${buttonClass} pointer-events-auto shadow-[0_14px_30px_-8px_var(--color-accent)]`}
       >
         Начать тест
-        <ArrowIcon />
       </StartLink>
     </div>
   );

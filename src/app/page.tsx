@@ -1,53 +1,44 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
-import { BellCurve } from "@/components/BellCurve";
-import { CategoryIcon } from "@/components/categoryIcon";
+import advantagesImage from "../../public/images/advantages.png";
+import ctaImage from "../../public/images/cta.png";
+import heroImage from "../../public/images/hero.png";
+import { OFFER } from "../../convex/lib/offer";
+import { type Cell, QUESTIONS } from "../../convex/lib/questionBank";
 import { FaqItem } from "@/components/FaqItem";
 import { Footer } from "@/components/Footer";
-import {
-  ArrowIcon,
-  BoltIcon,
-  ChartIcon,
-  ClockIcon,
-  ListIcon,
-  ShieldIcon,
-} from "@/components/icons";
-import { EXAMPLE_MATRIX, Matrix } from "@/components/Matrix";
+import { CheckIcon } from "@/components/icons";
 import { SkillCard } from "@/components/SkillCard";
 import { StartLink } from "@/components/StartLink";
 import { StickyStart } from "@/components/StickyStart";
 import { TrackEvent } from "@/components/TrackEvent";
-import { buttonClass, Card, Header } from "@/components/ui";
+import { TryTask } from "@/components/TryTask";
+import { buttonClass, Header } from "@/components/ui";
+
+// Первое задание теста для блока на главной. Правильный ответ в браузер не передаётся.
+const firstQuestion = QUESTIONS[0];
+const FIRST_TASK = {
+  id: firstQuestion.id,
+  matrix: firstQuestion.matrix ?? [],
+  options: firstQuestion.options.filter((o): o is Cell => typeof o !== "string"),
+};
 
 const NAV = [
   { href: "#advantages", label: "Преимущества" },
-  { href: "#tasks", label: "Задания" },
+  { href: "#tasks", label: "Задание" },
   { href: "#faq", label: "FAQ" },
-];
-
-const FACTS = [
-  { icon: ListIcon, label: "20 вопросов" },
-  { icon: ClockIcon, label: "Около 7 минут" },
-  { icon: BoltIcon, label: "Без регистрации" },
 ];
 
 const ADVANTAGES = [
   {
-    icon: ClockIcon,
     title: "7 минут",
     text: "Тест короткий: 20 вопросов без лишних анкет и ожидания.",
   },
   {
-    icon: BoltIcon,
     title: "Без регистрации",
     text: "Начинаете сразу. Email понадобится только на шаге оплаты.",
   },
   {
-    icon: ChartIcon,
-    title: "Сложность растёт",
-    text: "От простых задач к трудным, поэтому тест подходит любому уровню.",
-  },
-  {
-    icon: ShieldIcon,
     title: "Понятные условия",
     text: "Цена видна до оплаты, а подписка отменяется по email за минуту.",
   },
@@ -59,109 +50,94 @@ const SKILLS = [
   { title: "Вербальное мышление", text: "Аналогии и связи между понятиями.", value: 47 },
 ];
 
+// Пять самых частых вопросов: набор собран по FAQ конкурентов (IQMO, myIQ).
 const FAQ = [
+  {
+    q: "Можно ли пройти тест бесплатно?",
+    a: "Да. Тест открыт всем и не требует регистрации. Платным является только доступ к результату и разбору.",
+  },
+  {
+    q: "Сколько стоит доступ к результату?",
+    a: `${OFFER.terms} Цена и условия ещё раз показываются на экране оплаты до списания.`,
+  },
+  {
+    q: "Что я получу после оплаты?",
+    a: "Балл IQ по шкале со средним 100, ваше место среди других участников, разбор по трём навыкам мышления и пояснение, что значит результат.",
+  },
   {
     q: "Насколько точен результат?",
     a: "Это ориентировочная оценка по короткому тесту. Она показывает ваш уровень относительно других участников, но не заменяет очное тестирование у психолога.",
   },
   {
-    q: "Тест бесплатный?",
-    a: "Пройти тест можно бесплатно. Платный только доступ к результату и разбору — цена и условия показаны после теста, до оплаты.",
-  },
-  {
     q: "Как отменить подписку?",
-    a: "В любой момент на странице «Отменить подписку» внизу сайта: достаточно указать email, на который она оформлена.",
+    a: "В любой момент на странице «Отменить подписку» внизу сайта: достаточно указать email, на который она оформлена. Доступ сохранится до конца оплаченного периода.",
   },
 ];
 
-function SectionTitle({ children, sub }: { children: ReactNode; sub?: string }) {
+// Единый стиль блоков: лавандовая панель, внутри заголовок и белые карточки.
+function Panel({
+  id,
+  title,
+  sub,
+  children,
+}: {
+  id?: string;
+  title: string;
+  sub?: string;
+  children: ReactNode;
+}) {
   return (
-    <div className="flex flex-col gap-2">
-      <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">{children}</h2>
-      {sub && <p className="max-w-xl text-lg text-muted">{sub}</p>}
-    </div>
+    <section
+      id={id}
+      className="flex scroll-mt-20 flex-col gap-6 rounded-[2rem] bg-accent-soft p-5 sm:gap-8 sm:p-8 lg:p-10"
+    >
+      <div className="flex flex-col gap-2">
+        <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">{title}</h2>
+        {sub && <p className="max-w-xl text-lg text-muted">{sub}</p>}
+      </div>
+      {children}
+    </section>
   );
 }
+
 
 function HeroVisual() {
   return (
-    <div className="relative mx-auto w-full max-w-md animate-rise [animation-delay:120ms]">
-      {/* Декоративные фигуры */}
-      <span className="absolute -right-3 top-6 size-28 rounded-full bg-highlight" />
-      <span className="absolute -left-2 bottom-10 size-20 rotate-12 rounded-3xl bg-accent" />
-
-      <div className="relative w-[62%] -rotate-3 rounded-3xl border border-border bg-surface p-4 shadow-[0_24px_60px_-30px_rgba(21,22,28,0.45)]">
-        <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted">
-          Какой фигуры не хватает?
-        </p>
-        <Matrix cells={EXAMPLE_MATRIX} />
-      </div>
-
-      <div className="relative z-10 -mt-20 ml-auto w-[72%] rotate-2 rounded-3xl border border-border bg-surface p-4 shadow-[0_24px_60px_-30px_rgba(21,22,28,0.45)]">
-        <div className="flex items-start justify-between gap-2">
-          <p className="text-sm font-semibold text-muted">Ваш IQ</p>
-          <span className="rounded-full bg-highlight px-2.5 py-0.5 text-xs font-bold">
-            Пример
-          </span>
-        </div>
-        <p className="font-display text-4xl font-bold tracking-tight">124</p>
-        <p className="mb-1 text-xs text-muted">Выше, чем у 95% участников</p>
-        <BellCurve iq={124} />
-      </div>
-
-      <span className="absolute left-[52%] top-2 z-20 flex items-center gap-1.5 rounded-full bg-foreground px-3 py-1.5 text-xs font-bold text-white shadow-lg">
-        <ClockIcon className="size-3.5 text-highlight" />
-        6:42
-      </span>
+    <div className="mx-auto w-full max-w-lg animate-rise [animation-delay:120ms]">
+      <Image
+        src={heroImage}
+        alt="Человек за ноутбуком решает задание с фигурами"
+        sizes="(min-width: 1024px) 512px, 92vw"
+        priority
+        className="h-auto w-full"
+      />
     </div>
   );
 }
 
-function TaskExamples() {
-  const tile = "grid size-11 place-items-center rounded-xl text-lg font-extrabold";
+function Advantages() {
   return (
-    <div className="grid gap-3 lg:grid-cols-3">
-      <Card className="flex flex-col gap-4">
-        <CardLabel category="Логика" />
-        <div className="mx-auto w-40">
-          <Matrix cells={EXAMPLE_MATRIX} />
-        </div>
-        <p className="mt-auto text-muted">Найдите закономерность и недостающую фигуру.</p>
-      </Card>
-
-      <Card className="flex flex-col gap-4">
-        <CardLabel category="Числа" />
-        <div className="flex flex-1 flex-wrap items-center justify-center gap-2 py-6">
-          {[2, 4, 8, 16].map((n) => (
-            <span key={n} className={`${tile} bg-background`}>
-              {n}
+    <div className="grid items-center gap-6 lg:grid-cols-[2fr_3fr] lg:gap-10">
+      <Image
+        src={advantagesImage}
+        alt="Тест на экране телефона"
+        sizes="(min-width: 1024px) 380px, 320px"
+        className="mx-auto h-auto w-full max-w-xs lg:max-w-none"
+      />
+      <ul className="flex flex-col gap-7">
+        {ADVANTAGES.map(({ title, text }) => (
+          <li key={title} className="flex gap-3">
+            <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-accent text-white">
+              <CheckIcon className="size-4" />
             </span>
-          ))}
-          <span className={`${tile} bg-highlight`}>?</span>
-        </div>
-        <p className="mt-auto text-muted">Продолжите числовой ряд.</p>
-      </Card>
-
-      <Card className="flex flex-col gap-4">
-        <CardLabel category="Вербальное мышление" />
-        <div className="flex flex-1 flex-col items-center justify-center gap-2 py-6 text-lg font-extrabold">
-          <span className="rounded-xl bg-background px-4 py-2">птица → гнездо</span>
-          <span className="rounded-xl bg-accent-soft px-4 py-2 text-accent">
-            пчела → <span className="rounded-md bg-highlight px-2 text-foreground">?</span>
-          </span>
-        </div>
-        <p className="mt-auto text-muted">Подберите слово по аналогии.</p>
-      </Card>
+            <div className="flex flex-col gap-1">
+              <h3 className="text-lg font-extrabold">{title}</h3>
+              <p className="text-muted">{text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
-  );
-}
-
-function CardLabel({ category }: { category: string }) {
-  return (
-    <span className="flex items-center gap-2 self-start rounded-full bg-accent-soft px-3 py-1 text-sm font-bold text-accent">
-      <CategoryIcon category={category} className="size-4" />
-      {category}
-    </span>
   );
 }
 
@@ -177,16 +153,10 @@ export default function LandingPage() {
             </a>
           ))}
         </nav>
-        <StartLink
-          source="header"
-          className="rounded-full bg-accent px-5 py-2.5 text-sm font-bold text-white transition hover:brightness-110"
-        >
-          Начать
-        </StartLink>
       </Header>
 
-      <main className="mx-auto flex w-full max-w-5xl flex-col gap-20 overflow-x-clip px-4 pb-20 pt-6 lg:gap-28 lg:pt-14">
-        <section className="grid items-center gap-12 lg:grid-cols-2 lg:gap-10">
+      <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 overflow-x-clip px-4 pb-16 pt-6 lg:gap-8 lg:pt-10">
+        <section className="grid items-center gap-10 pb-6 lg:grid-cols-2 lg:pb-10">
           <div className="flex animate-rise flex-col gap-6">
             <h1 className="font-display text-[2rem] font-bold leading-[1.12] tracking-tight sm:text-5xl sm:leading-[1.1]">
               Узнайте свой уровень IQ{" "}
@@ -196,103 +166,82 @@ export default function LandingPage() {
               </span>
             </h1>
             <p className="text-lg text-muted">
-              Задачи на логику, числа и вербальное мышление. В конце — балл IQ и разбор
-              ваших сильных сторон.
+              20 вопросов на логику, числа и вербальное мышление — около 7 минут и без
+              регистрации. В конце — балл IQ и разбор ваших сильных сторон.
             </p>
             <div id="hero-cta" className="sm:max-w-xs">
               <StartLink source="hero" className={buttonClass}>
                 Начать тест
-                <ArrowIcon />
               </StartLink>
             </div>
-            <ul className="flex flex-wrap gap-x-5 gap-y-2">
-              {FACTS.map(({ icon: Icon, label }) => (
-                <li
-                  key={label}
-                  className="flex items-center gap-1.5 text-sm font-medium text-muted"
-                >
-                  <Icon className="size-4 text-accent" />
-                  {label}
-                </li>
-              ))}
-            </ul>
           </div>
           <HeroVisual />
         </section>
 
-        <section className="flex flex-col gap-8">
-          <SectionTitle sub="Не только общий балл, но и то, какие навыки мышления у вас развиты сильнее остальных.">
-            Что вы узнаете
-          </SectionTitle>
-          <div className="rounded-[2rem] bg-accent-soft p-4 sm:p-6">
-            <div className="mb-4 flex items-center justify-between gap-3 px-1">
-              <p className="font-bold">Ваш профиль мышления</p>
-              <span className="rounded-full bg-highlight px-2.5 py-0.5 text-xs font-bold">
-                Пример
-              </span>
-            </div>
-            <div className="grid gap-3 lg:grid-cols-3">
-              {SKILLS.map((skill) => (
-                <SkillCard
-                  key={skill.title}
-                  title={skill.title}
-                  score={skill.value}
-                  text={skill.text}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="advantages" className="flex scroll-mt-6 flex-col gap-8">
-          <SectionTitle>Наши преимущества</SectionTitle>
-          {/* Зазор в 1px показывает фон списка — получаются тонкие разделители при любом числе колонок. */}
-          <ul className="grid gap-px overflow-hidden rounded-[2rem] bg-[#34353d] text-white sm:grid-cols-2 lg:grid-cols-4">
-            {ADVANTAGES.map(({ icon: Icon, title, text }) => (
-              <li key={title} className="flex gap-4 bg-foreground p-6 lg:flex-col lg:gap-5 lg:p-8">
-                <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-highlight text-foreground">
-                  <Icon className="size-6" />
-                </span>
-                <div className="flex flex-col gap-1.5">
-                  <h3 className="text-lg font-extrabold">{title}</h3>
-                  <p className="text-white/70">{text}</p>
-                </div>
-              </li>
+        <Panel
+          title="Что вы узнаете"
+          sub="Не только общий балл, но и то, какие навыки мышления у вас развиты сильнее остальных."
+        >
+          <div className="grid gap-3 lg:grid-cols-3">
+            {SKILLS.map((skill) => (
+              <SkillCard
+                key={skill.title}
+                title={skill.title}
+                score={skill.value}
+                text={skill.text}
+                stacked
+              />
             ))}
-          </ul>
-        </section>
+          </div>
+        </Panel>
 
-        <section id="tasks" className="flex scroll-mt-6 flex-col gap-8">
-          <SectionTitle sub="Три типа заданий — от простых к сложным.">
-            Какие будут задания
-          </SectionTitle>
-          <TaskExamples />
-        </section>
+        <Panel id="advantages" title="Наши преимущества">
+          <Advantages />
+        </Panel>
 
-        <section id="faq" className="flex scroll-mt-6 flex-col gap-8">
-          <SectionTitle>Вопросы и ответы</SectionTitle>
-          <div>
+        <Panel
+          id="tasks"
+          title="Попробуйте первое задание"
+          sub="Проверьте себя прямо сейчас: это первый вопрос теста."
+        >
+          <TryTask
+            questionId={FIRST_TASK.id}
+            matrix={FIRST_TASK.matrix}
+            options={FIRST_TASK.options}
+          />
+        </Panel>
+
+        <Panel id="faq" title="Вопросы и ответы">
+          <div className="flex flex-col gap-3">
             {FAQ.map((item, i) => (
               <FaqItem key={item.q} index={i} question={item.q} answer={item.a} />
             ))}
           </div>
-        </section>
+        </Panel>
 
-        <section id="final-cta" className="relative flex flex-col gap-6 overflow-hidden rounded-[2rem] bg-accent p-6 text-white sm:p-10 md:flex-row md:items-center md:justify-between md:gap-10">
-          <span className="absolute -right-10 -top-16 size-40 rounded-full bg-white/10" />
-          <div className="relative flex flex-col gap-2">
-            <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-              Готовы проверить себя?
-            </h2>
-            <p className="text-lg text-white/80">Семь минут — и вы узнаете свой результат.</p>
+        <section
+          id="final-cta"
+          className="grid items-center gap-6 rounded-[2rem] bg-accent-soft p-5 sm:p-8 md:grid-cols-[1fr_auto] md:gap-10 lg:px-10 lg:py-8"
+        >
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+                Готовы проверить себя?
+              </h2>
+              <p className="text-lg text-muted">Семь минут — и вы узнаете свой результат.</p>
+            </div>
+            <div className="sm:max-w-xs">
+              <StartLink source="final" className={buttonClass}>
+                Начать тест
+              </StartLink>
+            </div>
           </div>
-          <StartLink
-            source="final"
-            className="relative inline-flex h-14 shrink-0 items-center justify-center gap-2 rounded-2xl bg-highlight px-8 text-base font-bold text-foreground transition active:scale-[0.98]"
-          >
-            Начать тест
-            <ArrowIcon />
-          </StartLink>
+          <Image
+            src={ctaImage}
+            alt="Человек радуется результату теста"
+            sizes="220px"
+            className="hidden h-auto w-52 md:block"
+          />
         </section>
       </main>
 
