@@ -5,7 +5,7 @@ import { CategoryIcon } from "@/components/categoryIcon";
 import { FaqItem } from "@/components/FaqItem";
 import { Footer } from "@/components/Footer";
 import { ArrowIcon, BoltIcon, ClockIcon, ListIcon } from "@/components/icons";
-import { MatrixPuzzle } from "@/components/MatrixPuzzle";
+import { EXAMPLE_MATRIX, Matrix } from "@/components/Matrix";
 import { SkillCard } from "@/components/SkillCard";
 import { TrackEvent } from "@/components/TrackEvent";
 import { buttonClass, Card, Header } from "@/components/ui";
@@ -38,7 +38,7 @@ const STEPS = [
 ];
 
 const SKILLS = [
-  { title: "Логика", text: "Выводы из условий и задачи с подвохом.", value: 86 },
+  { title: "Логика", text: "Закономерности в фигурах и задачи с подвохом.", value: 86 },
   { title: "Числа", text: "Закономерности в числовых рядах.", value: 68 },
   { title: "Вербальное мышление", text: "Аналогии и связи между понятиями.", value: 47 },
 ];
@@ -78,7 +78,7 @@ function HeroVisual() {
         <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted">
           Какой фигуры не хватает?
         </p>
-        <MatrixPuzzle />
+        <Matrix cells={EXAMPLE_MATRIX} />
       </div>
 
       <div className="relative z-10 -mt-20 ml-auto w-[72%] rotate-2 rounded-3xl border border-border bg-surface p-4 shadow-[0_24px_60px_-30px_rgba(21,22,28,0.45)]">
@@ -108,7 +108,7 @@ function TaskExamples() {
       <Card className="flex flex-col gap-4">
         <CardLabel category="Логика" />
         <div className="mx-auto w-40">
-          <MatrixPuzzle />
+          <Matrix cells={EXAMPLE_MATRIX} />
         </div>
         <p className="mt-auto text-muted">Найдите закономерность и недостающую фигуру.</p>
       </Card>

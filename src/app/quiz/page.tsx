@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { CategoryIcon } from "@/components/categoryIcon";
+import { Figure } from "@/components/Figure";
 import { BackIcon } from "@/components/icons";
+import { Matrix } from "@/components/Matrix";
 import { Timer } from "@/components/Timer";
 import { Header, Loading, ProgressBar, Screen } from "@/components/ui";
 import { errorMessage } from "@/lib/errors";
@@ -117,29 +119,43 @@ export default function QuizPage() {
             {question.prompt}
           </h1>
 
-          <div className="flex flex-col gap-3">
+          {question.matrix && (
+            <div className="mx-auto w-full max-w-[17rem] rounded-3xl border border-border bg-surface p-4">
+              <Matrix cells={question.matrix} />
+            </div>
+          )}
+
+          <div className={question.matrix ? "grid grid-cols-3 gap-3" : "flex flex-col gap-3"}>
             {question.options.map((option, i) => {
               const isSelected = selected === i;
+              const isFigure = typeof option !== "string";
               return (
                 <button
                   key={i}
                   type="button"
                   disabled={selected !== null}
                   onClick={() => choose(i)}
-                  className={`flex min-h-16 items-center gap-4 rounded-2xl border-2 px-4 py-3 text-left text-base font-semibold transition active:scale-[0.99] ${
+                  aria-label={isFigure ? `Вариант ${LETTERS[i]}` : undefined}
+                  className={`rounded-2xl border-2 text-left text-base font-semibold transition active:scale-[0.99] ${
+                    isFigure
+                      ? "relative p-3"
+                      : "flex min-h-16 items-center gap-4 px-4 py-3"
+                  } ${
                     isSelected
                       ? "border-accent bg-accent-soft"
                       : "border-transparent bg-surface shadow-[0_0_0_1px_var(--color-border)] hover:shadow-[0_0_0_1px_var(--color-foreground)]"
                   }`}
                 >
                   <span
-                    className={`grid size-9 shrink-0 place-items-center rounded-xl text-sm font-extrabold transition ${
-                      isSelected ? "bg-accent text-white" : "bg-background text-muted"
-                    }`}
+                    className={`grid shrink-0 place-items-center font-extrabold transition ${
+                      isFigure
+                        ? "absolute left-2 top-2 size-6 rounded-lg text-xs"
+                        : "size-9 rounded-xl text-sm"
+                    } ${isSelected ? "bg-accent text-white" : "bg-background text-muted"}`}
                   >
                     {LETTERS[i]}
                   </span>
-                  {option}
+                  {isFigure ? <Figure cell={option} className="mx-auto w-4/5" /> : option}
                 </button>
               );
             })}
