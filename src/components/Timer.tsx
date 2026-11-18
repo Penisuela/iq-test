@@ -20,7 +20,7 @@ export function Timer({ startedAt }: { startedAt: number }) {
   const elapsed = now === null ? 0 : Math.max(0, Math.floor((now - startedAt) / 1000));
 
   return (
-    <span className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-sm font-semibold tabular-nums">
+    <span className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1.5 text-sm font-semibold tabular-nums text-accent">
       <ClockIcon />
       {formatDuration(elapsed)}
     </span>

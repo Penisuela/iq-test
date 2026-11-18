@@ -15,26 +15,22 @@ export function FaqItem({
   const panelId = useId();
 
   return (
-    <div className="border-t-2 border-foreground last:border-b-2">
+    <div className="rounded-3xl bg-surface">
       <button
         type="button"
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen(!open)}
-        className="group flex w-full cursor-pointer items-center gap-4 py-5 text-left sm:gap-8 sm:py-7"
+        className="flex w-full cursor-pointer items-center gap-4 p-5 text-left"
       >
-        <span className="w-8 shrink-0 text-sm font-bold tabular-nums text-muted sm:w-12 sm:text-base">
+        <span className="w-7 shrink-0 text-sm font-bold tabular-nums text-accent">
           0{index + 1}
         </span>
-        <span className="flex-1 text-xl font-extrabold tracking-tight sm:text-3xl">
-          {question}
-        </span>
+        <span className="flex-1 text-lg font-extrabold tracking-tight sm:text-xl">{question}</span>
         <span
           aria-hidden
-          className={`grid size-10 shrink-0 place-items-center rounded-full text-2xl font-medium leading-none transition duration-300 sm:size-12 ${
-            open
-              ? "rotate-45 bg-foreground text-highlight"
-              : "bg-surface group-hover:bg-highlight"
+          className={`grid size-10 shrink-0 place-items-center rounded-full text-2xl font-medium leading-none transition duration-300 ${
+            open ? "rotate-45 bg-accent text-white" : "bg-accent-soft text-accent"
           }`}
         >
           +
@@ -49,7 +45,7 @@ export function FaqItem({
         }`}
       >
         <div className="overflow-hidden">
-          <p className="max-w-2xl pb-6 pl-12 text-lg text-muted sm:pb-8 sm:pl-20">{answer}</p>
+          <p className="max-w-2xl px-5 pb-5 pl-16 text-muted">{answer}</p>
         </div>
       </div>
     </div>

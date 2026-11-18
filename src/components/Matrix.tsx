@@ -18,12 +18,21 @@ export function Matrix({ cells }: { cells: (FigureCell | null)[] }) {
           key={i}
           transform={`translate(${(i % 3) * (CELL + GAP)} ${Math.floor(i / 3) * (CELL + GAP)})`}
         >
-          <rect
-            width={CELL}
-            height={CELL}
-            rx="16"
-            className={cell ? "fill-background" : "fill-highlight"}
-          />
+          {cell ? (
+            <rect width={CELL} height={CELL} rx="16" className="fill-background" />
+          ) : (
+            // Пропущенная клетка: пунктирная рамка без заливки, чтобы цвет не подсказывал ответ.
+            <rect
+              x="1.5"
+              y="1.5"
+              width={CELL - 3}
+              height={CELL - 3}
+              rx="15"
+              strokeWidth="3"
+              strokeDasharray="7 6"
+              className="fill-surface stroke-accent"
+            />
+          )}
           {cell ? (
             <FigureShapes cell={cell} />
           ) : (
@@ -31,7 +40,7 @@ export function Matrix({ cells }: { cells: (FigureCell | null)[] }) {
               x="32"
               y="43"
               textAnchor="middle"
-              className="fill-foreground text-[30px] font-extrabold"
+              className="fill-accent text-[30px] font-extrabold"
             >
               ?
             </text>
@@ -41,17 +50,3 @@ export function Matrix({ cells }: { cells: (FigureCell | null)[] }) {
     </svg>
   );
 }
-
-const c = (shape: FigureCell["shape"], fill: FigureCell["fill"]): FigureCell => ({
-  shape,
-  fill,
-  count: 1,
-  rotation: 0,
-});
-
-// Пример для лендинга: совпадает с первым заданием-матрицей в тесте.
-export const EXAMPLE_MATRIX: (FigureCell | null)[] = [
-  c("circle", "outline"), c("circle", "tint"), c("circle", "solid"),
-  c("square", "outline"), c("square", "tint"), c("square", "solid"),
-  c("triangle", "outline"), c("triangle", "tint"), null,
-];

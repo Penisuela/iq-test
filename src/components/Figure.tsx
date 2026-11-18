@@ -5,10 +5,18 @@ export type FigureCell = {
   rotation: number;
 };
 
-const FILL_CLASS: Record<FigureCell["fill"], string> = {
-  outline: "fill-none stroke-foreground",
-  tint: "fill-accent/25 stroke-accent",
-  solid: "fill-foreground stroke-foreground",
+const OUTLINE = "fill-none stroke-accent";
+const SOLID = "fill-accent stroke-accent";
+
+// Три состояния фигуры: пустой контур, контур с такой же фигурой внутри и сплошная.
+// Все три в одном фиолетовом цвете, поэтому ни одно не выглядит «выключенным».
+const INNER_SCALE = 0.45;
+// У треугольника центр тяжести ниже начала координат — сдвигаем внутреннюю фигуру, чтобы она стояла по центру.
+const INNER_SHIFT: Record<FigureCell["shape"], number> = {
+  circle: 0,
+  square: 0,
+  diamond: 0,
+  triangle: 1.8,
 };
 
 // Центры фигур в клетке 64×64 и их масштаб в зависимости от количества.
@@ -39,7 +47,12 @@ export function FigureShapes({ cell }: { cell: FigureCell }) {
     <>
       {centers.map(([x, y], i) => (
         <g key={i} transform={`translate(${x} ${y}) scale(${scale}) rotate(${cell.rotation})`}>
-          <Shape shape={cell.shape} className={FILL_CLASS[cell.fill]} />
+          <Shape shape={cell.shape} className={cell.fill === "solid" ? SOLID : OUTLINE} />
+          {cell.fill === "tint" && (
+            <g transform={`translate(0 ${INNER_SHIFT[cell.shape]}) scale(${INNER_SCALE})`}>
+              <Shape shape={cell.shape} className={SOLID} />
+            </g>
+          )}
         </g>
       ))}
     </>

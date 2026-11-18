@@ -42,7 +42,7 @@ export function BellCurve({ iq }: { iq?: number }) {
           <path d={AREA} clipPath={`url(#${clipId})`} className="fill-accent/25" />
         </>
       )}
-      <path d={LINE} fill="none" strokeWidth="2.5" className="stroke-foreground" />
+      <path d={LINE} fill="none" strokeWidth="2.5" className="stroke-accent" />
       <line x1="0" x2={W} y1={BASE} y2={BASE} strokeWidth="1.5" className="stroke-border" />
 
       {[70, 85, 100, 115, 130].map((tick) => (

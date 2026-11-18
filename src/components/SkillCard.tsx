@@ -8,19 +8,24 @@ function level(score: number): { label: string; className: string } {
 }
 
 // Карточка навыка: круговая шкала с баллом из 100, уровень и пояснение.
+// stacked — название, уровень и пояснение идут строго друг под другом: в ряду карточек строки стоят на одном уровне.
 export function SkillCard({
   title,
   score,
   text,
+  stacked = false,
 }: {
   title: string;
   score: number;
   text: string;
+  stacked?: boolean;
 }) {
   const { label, className } = level(score);
 
   return (
-    <div className="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4">
+    <div
+      className={`flex gap-4 rounded-3xl bg-surface p-5 ${stacked ? "items-start" : "items-center"}`}
+    >
       <div className="relative size-16 shrink-0">
         <svg viewBox="0 0 60 60" className="size-full -rotate-90" aria-hidden>
           <circle cx="30" cy="30" r={R} fill="none" strokeWidth="5" className="stroke-border" />
@@ -41,8 +46,14 @@ export function SkillCard({
         </span>
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <h3 className="font-bold">{title}</h3>
+        <div
+          className={
+            stacked
+              ? "flex flex-col items-start gap-1.5"
+              : "flex flex-wrap items-center gap-x-2 gap-y-1"
+          }
+        >
+          <h3 className={`font-bold ${stacked ? "whitespace-nowrap lg:text-[15px]" : ""}`}>{title}</h3>
           <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${className}`}>
             {label}
           </span>

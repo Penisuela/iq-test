@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-manrope), system-ui, sans-serif;
-  --font-display: var(--font-unbounded), var(--font-manrope), sans-serif;
+  --font-sans: var(--font-onest), system-ui, sans-serif;
+  --font-display: var(--font-unbounded), var(--font-onest), sans-serif;
 }
 
 @theme {
-  --color-background: #f4f3ee;
+  --color-background: #f6f7fb;
   --color-surface: #ffffff;
   --color-foreground: #15161c;
   --color-muted: #6e7080;
-  --color-border: #e4e2da;
+  --color-border: #e2e4f0;
   --color-accent: #5546ff;
   --color-accent-soft: #ecebff;
   --color-highlight: #c9f45c;
