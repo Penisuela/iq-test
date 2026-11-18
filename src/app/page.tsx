@@ -188,10 +188,6 @@ export default function LandingPage() {
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-20 overflow-x-clip px-4 pb-20 pt-6 lg:gap-28 lg:pt-14">
         <section className="grid items-center gap-12 lg:grid-cols-2 lg:gap-10">
           <div className="flex animate-rise flex-col gap-6">
-            <span className="flex items-center gap-2 self-start rounded-full border border-border bg-surface px-3.5 py-1.5 text-sm font-bold">
-              <SparkIcon className="size-4 text-accent" />
-              Тест на мышление
-            </span>
             <h1 className="text-[2.7rem] font-extrabold leading-[1.02] tracking-tight sm:text-6xl">
               Узнайте свой{" "}
               <span className="relative whitespace-nowrap">
