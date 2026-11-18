@@ -34,15 +34,8 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   verbal: "Вербальное мышление",
 };
 
+// Первый вопрос показывается на главной как «Попробуйте первое задание».
 export const QUESTIONS: Question[] = [
-  {
-    id: "n1",
-    category: "numeric",
-    difficulty: 1,
-    prompt: "Какое число продолжает ряд: 2, 4, 8, 16, …?",
-    options: ["20", "24", "30", "32"],
-    correct: 3,
-  },
   {
     id: "m1",
     category: "logic",
@@ -63,6 +56,14 @@ export const QUESTIONS: Question[] = [
       cell("diamond", "solid"),
     ],
     correct: 2,
+  },
+  {
+    id: "n1",
+    category: "numeric",
+    difficulty: 1,
+    prompt: "Какое число продолжает ряд: 2, 4, 8, 16, …?",
+    options: ["20", "24", "30", "32"],
+    correct: 3,
   },
   {
     id: "v1",

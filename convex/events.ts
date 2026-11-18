@@ -13,7 +13,7 @@ export const FUNNEL_EVENTS = [
 ] as const;
 
 // Кнопки «Начать тест» на главной: по ним видно, какой блок приводит в тест.
-export const CTA_SOURCES = ["header", "hero", "sticky", "final"] as const;
+export const CTA_SOURCES = ["hero", "task", "sticky", "final"] as const;
 
 export const track = mutation({
   args: {
