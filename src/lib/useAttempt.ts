@@ -4,7 +4,7 @@ import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { api } from "../../convex/_generated/api";
-import { TOKEN_KEY, useStored } from "@/lib/storage";
+import { TOKEN_KEY, useStored, writeStored } from "@/lib/storage";
 
 // Состояние попытки для экранов после теста. Без завершённого теста ведёт на /quiz.
 export function useFinishedAttempt() {
@@ -13,10 +13,12 @@ export function useFinishedAttempt() {
   const attempt = useQuery(api.attempts.paywall, token ? { token } : "skip");
 
   useEffect(() => {
-    if (token === null || attempt?.status === "in_progress") {
+    // Попытки с сохранённым токеном больше нет — забываем его.
+    if (attempt === null) writeStored(TOKEN_KEY, null);
+    if (token === null || attempt === null || attempt?.status === "in_progress") {
       router.replace("/quiz");
     }
-  }, [token, attempt?.status, router]);
+  }, [token, attempt, router]);
 
   const ready = token && attempt?.status === "finished";
   return ready ? { token, attempt } : null;

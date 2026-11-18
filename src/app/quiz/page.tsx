@@ -31,16 +31,24 @@ export default function QuizPage() {
   const [selected, setSelected] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Попытки с сохранённым токеном больше нет — забываем его и начинаем заново.
   useEffect(() => {
-    if (starting.current || readStored(TOKEN_KEY)) return;
+    if (attempt === null) writeStored(TOKEN_KEY, null);
+  }, [attempt]);
+
+  useEffect(() => {
+    if (token !== null || starting.current || readStored(TOKEN_KEY)) return;
     starting.current = true;
     start()
       .then(({ token }) => {
         writeStored(TOKEN_KEY, token);
         void track({ name: "quiz_start", token });
       })
-      .catch((e) => setError(errorMessage(e)));
-  }, [start, track]);
+      .catch((e) => setError(errorMessage(e)))
+      .finally(() => {
+        starting.current = false;
+      });
+  }, [token, start, track]);
 
   useEffect(() => {
     if (attempt?.status === "finished" && !leaving.current) {

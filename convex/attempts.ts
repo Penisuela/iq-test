@@ -1,6 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation, mutation, query } from "./_generated/server";
-import { getAttemptByToken } from "./lib/attempt";
+import { findAttemptByToken, getAttemptByToken } from "./lib/attempt";
 import { QUESTIONS } from "./lib/questionBank";
 import { scoreAttempt } from "./lib/scoring";
 import { categoryScore } from "./schema";
@@ -56,18 +56,23 @@ export const finish = mutation({
 });
 
 // Тизер для paywall: без балла и без разбивки по категориям.
+// null — попытки с таким токеном нет (например, в браузере остался старый токен).
 export const paywall = query({
   args: { token: v.string() },
-  returns: v.object({
+  returns: v.union(
+    v.null(),
+    v.object({
     status: v.union(v.literal("in_progress"), v.literal("finished")),
     paid: v.boolean(),
     startedAt: v.number(),
     answered: v.number(),
     total: v.number(),
-    durationSec: v.union(v.number(), v.null()),
-  }),
+      durationSec: v.union(v.number(), v.null()),
+    }),
+  ),
   handler: async (ctx, { token }) => {
-    const attempt = await getAttemptByToken(ctx, token);
+    const attempt = await findAttemptByToken(ctx, token);
+    if (!attempt) return null;
     return {
       status: attempt.status,
       paid: attempt.paid,
@@ -93,9 +98,9 @@ export const result = query({
     }),
   ),
   handler: async (ctx, { token }) => {
-    const attempt = await getAttemptByToken(ctx, token);
+    const attempt = await findAttemptByToken(ctx, token);
     if (
-      !attempt.paid ||
+      !attempt?.paid ||
       attempt.iq === undefined ||
       attempt.percentile === undefined ||
       attempt.categories === undefined
