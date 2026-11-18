@@ -9,7 +9,8 @@ import { Figure } from "@/components/Figure";
 import { Matrix } from "@/components/Matrix";
 import { Timer } from "@/components/Timer";
 import { buttonClass, Header, Loading, ProgressBar, Screen } from "@/components/ui";
-import { type Boost, BOOST_MILESTONES, buildBoost } from "@/lib/boost";
+import { type Boost, BOOST_IMAGES, BOOST_MILESTONES, buildBoost } from "@/lib/boost";
+import { useAvailableImages } from "@/lib/useAvailableImages";
 import { errorMessage } from "@/lib/errors";
 import { readStored, SUBSCRIBER_KEY, TOKEN_KEY, useStored, writeStored } from "@/lib/storage";
 
@@ -35,6 +36,7 @@ export default function QuizPage() {
   const [finishing, setFinishing] = useState(false);
   // Экран поддержки, который сейчас показан вместо вопроса.
   const [boost, setBoost] = useState<Boost | null>(null);
+  const boostImages = useAvailableImages(BOOST_IMAGES);
   const [error, setError] = useState<string | null>(null);
 
   // Попытки с сохранённым токеном больше нет — забываем его и начинаем заново.
@@ -93,9 +95,7 @@ export default function QuizPage() {
     if (!token) return;
     setPicked((prev) => ({ ...prev, [question.id]: option }));
     setError(null);
-    answer({ token, questionId: question.id, option }).catch((e) =>
-      setError(errorMessage(e)),
-    );
+    answer({ token, questionId: question.id, option }).catch((e) => setError(errorMessage(e)));
 
     // После 5, 10 и 15 ответов показываем экран поддержки. Повторный ответ на тот же вопрос не считается.
     const answeredNow = question.id in answers ? answeredCount : answeredCount + 1;
@@ -147,7 +147,10 @@ export default function QuizPage() {
           </div>
           <ProgressBar value={(answeredCount / questions.length) * 100} />
 
-          <nav aria-label="Вопросы теста" className="grid grid-cols-10 gap-1 min-[360px]:gap-1.5 md:grid-cols-20">
+          <nav
+            aria-label="Вопросы теста"
+            className="grid grid-cols-10 gap-1 min-[360px]:gap-1.5 md:grid-cols-20"
+          >
             {questions.map((q, i) => {
               const isCurrent = i === index;
               const isAnswered = q.id in answers;
@@ -173,7 +176,13 @@ export default function QuizPage() {
           </nav>
         </div>
 
-        {boost && <BoostScreen boost={boost} onContinue={() => setBoost(null)} />}
+        {boost && (
+          <BoostScreen
+            boost={boost}
+            hasImage={boostImages.has(boost.image)}
+            onContinue={() => setBoost(null)}
+          />
+        )}
 
         <div
           key={question.id}
@@ -198,9 +207,7 @@ export default function QuizPage() {
 
             <div
               className={
-                question.matrix
-                  ? "grid flex-1 grid-cols-3 gap-3"
-                  : "grid gap-3 md:grid-cols-2"
+                question.matrix ? "grid flex-1 grid-cols-3 gap-3" : "grid gap-3 md:grid-cols-2"
               }
             >
               {question.options.map((option, i) => {

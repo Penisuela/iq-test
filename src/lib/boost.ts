@@ -13,6 +13,12 @@ export type Boost = {
   text: string;
 };
 
+export const BOOST_IMAGES = [
+  "/images/boost-speed.png",
+  "/images/boost-focus.png",
+  "/images/boost-finish.png",
+] as const;
+
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 // Чем меньше секунд на вопрос, тем выше оценка; держим её в правдоподобных границах.
@@ -26,7 +32,7 @@ export function buildBoost(milestone: BoostMilestone, elapsedSec: number): Boost
   if (milestone === 5) {
     return {
       milestone,
-      image: "/images/boost-speed.png",
+      image: BOOST_IMAGES[0],
       eyebrow: "Отличный старт",
       value: `${percent}%`,
       text: `Вы отвечаете быстрее, чем ${percent}% участников теста.`,
@@ -36,7 +42,7 @@ export function buildBoost(milestone: BoostMilestone, elapsedSec: number): Boost
     const focus = clamp(percent - 3, 61, 95);
     return {
       milestone,
-      image: "/images/boost-focus.png",
+      image: BOOST_IMAGES[1],
       eyebrow: "Половина позади",
       value: `${focus}%`,
       text: `Вы держите концентрацию лучше, чем ${focus}% участников. Дальше вопросы сложнее.`,
@@ -45,7 +51,7 @@ export function buildBoost(milestone: BoostMilestone, elapsedSec: number): Boost
   const top = 100 - percent;
   return {
     milestone,
-    image: "/images/boost-finish.png",
+    image: BOOST_IMAGES[2],
     eyebrow: "Финишная прямая",
     value: `Топ ${top}%`,
     text: `По темпу вы в числе ${top}% лучших. Осталось 5 вопросов до результата.`,
