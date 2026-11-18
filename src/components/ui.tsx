@@ -20,7 +20,7 @@ export function Logo() {
 
 export function Header({ children }: { children?: ReactNode }) {
   return (
-    <header className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4">
+    <header className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-4 px-4">
       <Logo />
       {children}
     </header>
