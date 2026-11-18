@@ -39,7 +39,9 @@ describe("попытка", () => {
     const { token } = await t.mutation(api.attempts.start, {});
     await t.mutation(api.attempts.answer, { token, questionId: "n1", option: 0 });
     await t.mutation(api.attempts.answer, { token, questionId: "n1", option: 3 });
-    expect((await t.query(api.attempts.paywall, { token }))?.answered).toBe(1);
+    const attempt = await t.query(api.attempts.paywall, { token });
+    expect(attempt?.answered).toBe(1);
+    expect(attempt?.answers).toEqual([{ questionId: "n1", option: 3 }]);
   });
 
   test("неизвестный токен не роняет запросы", async () => {

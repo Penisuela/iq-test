@@ -62,11 +62,13 @@ export const paywall = query({
   returns: v.union(
     v.null(),
     v.object({
-    status: v.union(v.literal("in_progress"), v.literal("finished")),
-    paid: v.boolean(),
-    startedAt: v.number(),
-    answered: v.number(),
-    total: v.number(),
+      status: v.union(v.literal("in_progress"), v.literal("finished")),
+      paid: v.boolean(),
+      startedAt: v.number(),
+      // Собственные ответы пользователя — чтобы показать выбранное при возврате к вопросу.
+      answers: v.array(v.object({ questionId: v.string(), option: v.number() })),
+      answered: v.number(),
+      total: v.number(),
       durationSec: v.union(v.number(), v.null()),
     }),
   ),
@@ -77,6 +79,7 @@ export const paywall = query({
       status: attempt.status,
       paid: attempt.paid,
       startedAt: attempt.startedAt,
+      answers: attempt.answers,
       answered: attempt.answers.length,
       total: QUESTIONS.length,
       durationSec: attempt.finishedAt
