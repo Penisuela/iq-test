@@ -12,10 +12,10 @@ const COLUMNS = [
   {
     title: "Документы",
     items: [
-      { label: "Политика конфиденциальности", href: "/legal#privacy" },
-      { label: "Оферта", href: "/legal#offer" },
-      { label: "Пользовательское соглашение", href: "/legal#terms" },
-      { label: "Согласие на обработку данных", href: "/legal#consent" },
+      { label: "Политика конфиденциальности", href: "/legal/privacy" },
+      { label: "Оферта", href: "/legal/offer" },
+      { label: "Пользовательское соглашение", href: "/legal/terms" },
+      { label: "Согласие на обработку данных", href: "/legal/consent" },
     ],
   },
   {
