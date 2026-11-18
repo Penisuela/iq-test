@@ -3,7 +3,14 @@ import { BellCurve } from "@/components/BellCurve";
 import { CategoryIcon } from "@/components/categoryIcon";
 import { FaqItem } from "@/components/FaqItem";
 import { Footer } from "@/components/Footer";
-import { ArrowIcon, BoltIcon, ClockIcon, ListIcon } from "@/components/icons";
+import {
+  ArrowIcon,
+  BoltIcon,
+  ChartIcon,
+  ClockIcon,
+  ListIcon,
+  ShieldIcon,
+} from "@/components/icons";
 import { EXAMPLE_MATRIX, Matrix } from "@/components/Matrix";
 import { SkillCard } from "@/components/SkillCard";
 import { StartLink } from "@/components/StartLink";
@@ -12,6 +19,7 @@ import { TrackEvent } from "@/components/TrackEvent";
 import { buttonClass, Card, Header } from "@/components/ui";
 
 const NAV = [
+  { href: "#advantages", label: "Преимущества" },
   { href: "#tasks", label: "Задания" },
   { href: "#faq", label: "FAQ" },
 ];
@@ -20,6 +28,29 @@ const FACTS = [
   { icon: ListIcon, label: "20 вопросов" },
   { icon: ClockIcon, label: "Около 7 минут" },
   { icon: BoltIcon, label: "Без регистрации" },
+];
+
+const ADVANTAGES = [
+  {
+    icon: ClockIcon,
+    title: "7 минут",
+    text: "Тест короткий: 20 вопросов без лишних анкет и ожидания.",
+  },
+  {
+    icon: BoltIcon,
+    title: "Без регистрации",
+    text: "Начинаете сразу. Email понадобится только на шаге оплаты.",
+  },
+  {
+    icon: ChartIcon,
+    title: "Сложность растёт",
+    text: "От простых задач к трудным, поэтому тест подходит любому уровню.",
+  },
+  {
+    icon: ShieldIcon,
+    title: "Понятные условия",
+    text: "Цена видна до оплаты, а подписка отменяется по email за минуту.",
+  },
 ];
 
 const SKILLS = [
@@ -189,13 +220,6 @@ export default function LandingPage() {
           <HeroVisual />
         </section>
 
-        <section id="tasks" className="flex scroll-mt-6 flex-col gap-8">
-          <SectionTitle sub="Три типа заданий — от простых к сложным.">
-            Какие будут задания
-          </SectionTitle>
-          <TaskExamples />
-        </section>
-
         <section className="flex flex-col gap-8">
           <SectionTitle sub="Не только общий балл, но и то, какие навыки мышления у вас развиты сильнее остальных.">
             Что вы узнаете
@@ -218,6 +242,31 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
+        </section>
+
+        <section id="advantages" className="flex scroll-mt-6 flex-col gap-8">
+          <SectionTitle>Наши преимущества</SectionTitle>
+          {/* Зазор в 1px показывает фон списка — получаются тонкие разделители при любом числе колонок. */}
+          <ul className="grid gap-px overflow-hidden rounded-[2rem] bg-[#34353d] text-white sm:grid-cols-2 lg:grid-cols-4">
+            {ADVANTAGES.map(({ icon: Icon, title, text }) => (
+              <li key={title} className="flex gap-4 bg-foreground p-6 lg:flex-col lg:gap-5 lg:p-8">
+                <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-highlight text-foreground">
+                  <Icon className="size-6" />
+                </span>
+                <div className="flex flex-col gap-1.5">
+                  <h3 className="text-lg font-extrabold">{title}</h3>
+                  <p className="text-white/70">{text}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section id="tasks" className="flex scroll-mt-6 flex-col gap-8">
+          <SectionTitle sub="Три типа заданий — от простых к сложным.">
+            Какие будут задания
+          </SectionTitle>
+          <TaskExamples />
         </section>
 
         <section id="faq" className="flex scroll-mt-6 flex-col gap-8">
