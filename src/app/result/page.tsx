@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { api } from "../../../convex/_generated/api";
 import { BellCurve } from "@/components/BellCurve";
+import { History } from "@/components/History";
 import { SkillCard } from "@/components/SkillCard";
 import { TrackEvent } from "@/components/TrackEvent";
 import {
@@ -118,6 +119,7 @@ export default function ResultPage() {
         <TrackEvent name="result_view" />
         <Score iq={result.iq} percentile={result.percentile} />
         <Skills categories={result.categories} />
+        {state && <History token={state.token} />}
         <button type="button" onClick={retake} className={buttonGhostClass}>
           Пройти тест заново
         </button>
