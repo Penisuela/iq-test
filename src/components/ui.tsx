@@ -28,9 +28,13 @@ export function Header({ children }: { children?: ReactNode }) {
 }
 
 // Узкая колонка для экранов воронки: на телефоне во всю ширину, на десктопе по центру.
-export function Screen({ children }: { children: ReactNode }) {
+export function Screen({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 px-4 pb-10 pt-2">
+    <main
+      className={`mx-auto flex w-full flex-1 flex-col gap-5 px-4 pb-10 pt-2 ${
+        wide ? "max-w-md md:max-w-3xl md:gap-8 md:pt-6" : "max-w-md"
+      }`}
+    >
       {children}
     </main>
   );
