@@ -260,18 +260,17 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="relative flex flex-col items-center gap-5 overflow-hidden rounded-[2rem] bg-accent px-6 py-16 text-center text-white">
-          <span className="absolute -left-10 -top-10 size-28 rounded-full bg-white/10 sm:size-36" />
-          <span className="absolute -bottom-12 -right-8 size-32 rotate-12 rounded-[2rem] bg-white/10 sm:size-40" />
-          <h2 className="font-display relative max-w-lg text-2xl font-bold tracking-tight sm:text-3xl">
-            Готовы проверить себя?
-          </h2>
-          <p className="relative max-w-sm text-white/80">
-            Семь минут — и вы узнаете свой результат.
-          </p>
+        <section className="relative flex flex-col gap-6 overflow-hidden rounded-[2rem] bg-accent p-6 text-white sm:p-10 md:flex-row md:items-center md:justify-between md:gap-10">
+          <span className="absolute -right-10 -top-16 size-40 rounded-full bg-white/10" />
+          <div className="relative flex flex-col gap-2">
+            <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+              Готовы проверить себя?
+            </h2>
+            <p className="text-lg text-white/80">Семь минут — и вы узнаете свой результат.</p>
+          </div>
           <Link
             href="/quiz"
-            className="relative inline-flex h-14 items-center gap-2 rounded-2xl bg-highlight px-8 text-base font-bold text-foreground transition active:scale-[0.98]"
+            className="relative inline-flex h-14 shrink-0 items-center justify-center gap-2 rounded-2xl bg-highlight px-8 text-base font-bold text-foreground transition active:scale-[0.98]"
           >
             Начать тест
             <ArrowIcon />
