@@ -63,6 +63,8 @@ export function TryTask({
         <div className="mx-auto w-full max-w-[16rem] shrink-0 md:mx-0 md:w-72 md:max-w-none">
           <Matrix cells={matrix} />
         </div>
+        {/* На широком экране таблицу и варианты разделяет вертикальная линия. */}
+        <span aria-hidden className="hidden w-px self-stretch bg-border md:block" />
         {/* На телефоне варианты идут под таблицей — отделяем их подписью и линией, чтобы не сливались. */}
         <p className="-mb-2 border-t border-border pt-5 text-sm font-bold text-muted md:hidden">
           Выберите ответ
