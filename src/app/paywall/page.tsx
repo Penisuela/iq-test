@@ -6,7 +6,14 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { api } from "../../../convex/_generated/api";
 import { BellCurve } from "@/components/BellCurve";
-import { ArrowIcon, CheckIcon, LockIcon } from "@/components/icons";
+import {
+  ArrowIcon,
+  ChartIcon,
+  ListIcon,
+  LockIcon,
+  LogicIcon,
+  SparkIcon,
+} from "@/components/icons";
 import { TrackEvent } from "@/components/TrackEvent";
 import { buttonClass, Card, Header, Loading, Screen } from "@/components/ui";
 import { formatDuration } from "@/lib/level";
@@ -14,10 +21,10 @@ import { PLAN_KEY, useStored, writeStored } from "@/lib/storage";
 import { useFinishedAttempt } from "@/lib/useAttempt";
 
 const INCLUDED = [
-  "Точный балл IQ по шкале со средним 100",
-  "Ваше место среди других участников",
-  "Разбор по трём навыкам мышления",
-  "Пояснение, что значит ваш результат",
+  { icon: SparkIcon, label: "Точный балл IQ по шкале со средним 100" },
+  { icon: ChartIcon, label: "Ваше место среди других участников" },
+  { icon: LogicIcon, label: "Разбор по трём навыкам мышления" },
+  { icon: ListIcon, label: "Пояснение, что значит ваш результат" },
 ];
 
 export default function PaywallPage() {
@@ -75,11 +82,13 @@ export default function PaywallPage() {
 
         <Card>
           <h2 className="mb-3 text-lg font-bold">Что вы получите</h2>
-          <ul className="flex flex-col gap-2.5">
-            {INCLUDED.map((item) => (
-              <li key={item} className="flex gap-3">
-                <CheckIcon className="mt-0.5 size-5 shrink-0 text-accent" />
-                {item}
+          <ul className="flex flex-col gap-3">
+            {INCLUDED.map(({ icon: Icon, label }) => (
+              <li key={label} className="flex items-center gap-3 font-medium">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent">
+                  <Icon />
+                </span>
+                {label}
               </li>
             ))}
           </ul>

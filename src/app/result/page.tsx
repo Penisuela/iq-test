@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { api } from "../../../convex/_generated/api";
 import { BellCurve } from "@/components/BellCurve";
+import { CategoryIcon } from "@/components/categoryIcon";
 import { TrackEvent } from "@/components/TrackEvent";
 import { buttonGhostClass, Card, Header, Loading, ProgressBar, Screen } from "@/components/ui";
 import { iqLevel } from "@/lib/level";
@@ -48,14 +49,23 @@ function Skills({ categories }: { categories: Category[] }) {
       </p>
       <ul className="flex flex-col gap-5">
         {categories.map((c) => (
-          <li key={c.category} className="flex flex-col gap-2">
-            <div className="flex items-baseline justify-between gap-3 font-semibold">
-              <span>{c.category}</span>
-              <span className="text-sm tabular-nums text-muted">
-                {c.correct} из {c.total}
-              </span>
+          <li key={c.category} className="flex items-center gap-4">
+            <span
+              className={`grid size-11 shrink-0 place-items-center rounded-2xl ${
+                c === best ? "bg-foreground text-highlight" : "bg-accent-soft text-accent"
+              }`}
+            >
+              <CategoryIcon category={c.category} />
+            </span>
+            <div className="flex flex-1 flex-col gap-2">
+              <div className="flex items-baseline justify-between gap-3 font-semibold">
+                <span>{c.category}</span>
+                <span className="text-sm tabular-nums text-muted">
+                  {c.correct} из {c.total}
+                </span>
+              </div>
+              <ProgressBar value={(c.correct / c.total) * 100} />
             </div>
-            <ProgressBar value={(c.correct / c.total) * 100} />
           </li>
         ))}
       </ul>

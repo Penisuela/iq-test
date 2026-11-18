@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
+import { CategoryIcon } from "@/components/categoryIcon";
 import { BackIcon } from "@/components/icons";
 import { Timer } from "@/components/Timer";
 import { Header, Loading, ProgressBar, Screen } from "@/components/ui";
@@ -92,7 +93,8 @@ export default function QuizPage() {
       <Screen>
         <div className="flex flex-col gap-2.5">
           <div className="flex items-center justify-between text-sm font-semibold">
-            <span className="rounded-full bg-accent-soft px-3 py-1 text-accent">
+            <span className="flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-accent">
+              <CategoryIcon category={question.category} className="size-4" />
               {question.category}
             </span>
             <span className="tabular-nums text-muted">
