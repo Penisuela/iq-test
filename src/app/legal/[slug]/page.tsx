@@ -29,7 +29,7 @@ export default async function LegalDocPage({ params }: PageProps<"/legal/[slug]"
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8 px-4 pb-16 pt-6">
         <Link
           href="/legal"
-          className="flex items-center gap-2 self-start text-sm font-semibold text-muted transition hover:text-foreground"
+          className="-my-3 flex items-center gap-2 self-start py-3 text-sm font-semibold text-muted transition hover:text-foreground"
         >
           <BackIcon className="size-4" />
           Все документы

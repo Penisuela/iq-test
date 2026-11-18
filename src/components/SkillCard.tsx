@@ -53,7 +53,7 @@ export function SkillCard({
               : "flex flex-wrap items-center gap-x-2 gap-y-1"
           }
         >
-          <h3 className={`font-bold ${stacked ? "whitespace-nowrap lg:text-[15px]" : ""}`}>{title}</h3>
+          <h3 className={`font-bold ${stacked ? "lg:whitespace-nowrap lg:text-[15px]" : ""}`}>{title}</h3>
           <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${className}`}>
             {label}
           </span>

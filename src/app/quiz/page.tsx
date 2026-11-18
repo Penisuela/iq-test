@@ -147,7 +147,7 @@ export default function QuizPage() {
           </div>
           <ProgressBar value={(answeredCount / questions.length) * 100} />
 
-          <nav aria-label="Вопросы теста" className="grid grid-cols-10 gap-1.5 md:grid-cols-20">
+          <nav aria-label="Вопросы теста" className="grid grid-cols-10 gap-1 min-[360px]:gap-1.5 md:grid-cols-20">
             {questions.map((q, i) => {
               const isCurrent = i === index;
               const isAnswered = q.id in answers;

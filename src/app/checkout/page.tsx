@@ -89,7 +89,7 @@ export default function CheckoutPage() {
 
         <Link
           href="/paywall"
-          className="flex items-center gap-2 self-start text-sm font-semibold text-muted transition hover:text-foreground"
+          className="-my-3 flex items-center gap-2 self-start py-3 text-sm font-semibold text-muted transition hover:text-foreground"
         >
           <BackIcon className="size-4" />
           Назад
