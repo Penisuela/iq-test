@@ -4,14 +4,7 @@ import { BellCurve } from "@/components/BellCurve";
 import { CategoryIcon } from "@/components/categoryIcon";
 import { FaqItem } from "@/components/FaqItem";
 import { Footer } from "@/components/Footer";
-import {
-  ArrowIcon,
-  BoltIcon,
-  ChartIcon,
-  ClockIcon,
-  ListIcon,
-  SparkIcon,
-} from "@/components/icons";
+import { ArrowIcon, BoltIcon, ClockIcon, ListIcon } from "@/components/icons";
 import { MatrixPuzzle } from "@/components/MatrixPuzzle";
 import { SkillCard } from "@/components/SkillCard";
 import { TrackEvent } from "@/components/TrackEvent";
@@ -31,25 +24,16 @@ const FACTS = [
 
 const STEPS = [
   {
-    icon: ListIcon,
     title: "Пройдите тест",
     text: "20 вопросов с нарастающей сложностью. Регистрация не нужна.",
-    tone: "bg-surface border border-border",
-    badge: "bg-accent-soft text-accent",
   },
   {
-    icon: ChartIcon,
     title: "Откройте результат",
     text: "Балл IQ и ваше место среди других участников.",
-    tone: "bg-accent text-white",
-    badge: "bg-white/15 text-white",
   },
   {
-    icon: SparkIcon,
     title: "Изучите разбор",
     text: "Сильные стороны по трём навыкам мышления.",
-    tone: "bg-highlight",
-    badge: "bg-foreground text-highlight",
   },
 ];
 
@@ -77,7 +61,7 @@ const FAQ = [
 function SectionTitle({ children, sub }: { children: ReactNode; sub?: string }) {
   return (
     <div className="flex flex-col gap-2">
-      <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{children}</h2>
+      <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">{children}</h2>
       {sub && <p className="max-w-xl text-lg text-muted">{sub}</p>}
     </div>
   );
@@ -89,7 +73,6 @@ function HeroVisual() {
       {/* Декоративные фигуры */}
       <span className="absolute -right-3 top-6 size-28 rounded-full bg-highlight" />
       <span className="absolute -left-2 bottom-10 size-20 rotate-12 rounded-3xl bg-accent" />
-      <span className="absolute bottom-0 right-16 size-10 rounded-full border-[6px] border-foreground" />
 
       <div className="relative w-[62%] -rotate-3 rounded-3xl border border-border bg-surface p-4 shadow-[0_24px_60px_-30px_rgba(21,22,28,0.45)]">
         <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted">
@@ -105,7 +88,7 @@ function HeroVisual() {
             Пример
           </span>
         </div>
-        <p className="text-5xl font-extrabold tracking-tight">124</p>
+        <p className="font-display text-4xl font-bold tracking-tight">124</p>
         <p className="mb-1 text-xs text-muted">Выше, чем у 95% участников</p>
         <BellCurve iq={124} />
       </div>
@@ -189,7 +172,7 @@ export default function LandingPage() {
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-20 overflow-x-clip px-4 pb-20 pt-6 lg:gap-28 lg:pt-14">
         <section className="grid items-center gap-12 lg:grid-cols-2 lg:gap-10">
           <div className="flex animate-rise flex-col gap-6">
-            <h1 className="text-[2.7rem] font-extrabold leading-[1.02] tracking-tight sm:text-6xl">
+            <h1 className="font-display text-[2rem] font-bold leading-[1.12] tracking-tight sm:text-5xl sm:leading-[1.1]">
               Узнайте свой{" "}
               <span className="relative whitespace-nowrap">
                 <span className="absolute inset-x-0 bottom-1 h-3 rounded-full bg-highlight sm:h-4" />
@@ -231,34 +214,31 @@ export default function LandingPage() {
 
         <section id="how" className="flex scroll-mt-6 flex-col gap-8">
           <SectionTitle>Как это работает</SectionTitle>
-          <ol className="grid gap-3 sm:grid-cols-3">
-            {STEPS.map(({ icon: Icon, ...step }, i) => (
-              <li key={step.title} className={`flex flex-col rounded-3xl p-5 ${step.tone}`}>
-                <div className="mb-10 flex items-start justify-between">
-                  <span className={`grid size-12 place-items-center rounded-2xl ${step.badge}`}>
-                    <Icon className="size-6" />
-                  </span>
-                  <span className="text-5xl font-extrabold leading-none opacity-20">
-                    0{i + 1}
-                  </span>
-                </div>
+          <ol className="grid divide-y divide-border rounded-3xl border border-border bg-surface sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            {STEPS.map((step, i) => (
+              <li key={step.title} className="flex flex-col gap-2 p-6 sm:p-8">
+                <span className="mb-4 font-display text-4xl font-bold text-accent sm:mb-8">
+                  0{i + 1}
+                </span>
                 <h3 className="text-xl font-extrabold">{step.title}</h3>
-                <p className="mt-1 opacity-75">{step.text}</p>
+                <p className="text-muted">{step.text}</p>
               </li>
             ))}
           </ol>
         </section>
 
-        <section className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
+        <section className="flex flex-col gap-8">
           <SectionTitle sub="Не только общий балл, но и то, какие навыки мышления у вас развиты сильнее остальных.">
             Что вы узнаете
           </SectionTitle>
-          <div className="rounded-[2rem] bg-gradient-to-br from-accent-soft to-highlight/40 p-4 sm:p-6">
-            <div className="flex flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[0_24px_60px_-30px_rgba(21,22,28,0.35)] sm:p-5">
-              <div className="flex items-center justify-between gap-3">
-                <p className="font-bold">Ваш профиль мышления</p>
-                <span className="text-xs font-semibold text-muted">Пример</span>
-              </div>
+          <div className="rounded-[2rem] bg-accent-soft p-4 sm:p-6">
+            <div className="mb-4 flex items-center justify-between gap-3 px-1">
+              <p className="font-bold">Ваш профиль мышления</p>
+              <span className="rounded-full bg-highlight px-2.5 py-0.5 text-xs font-bold">
+                Пример
+              </span>
+            </div>
+            <div className="grid gap-3 lg:grid-cols-3">
               {SKILLS.map((skill) => (
                 <SkillCard
                   key={skill.title}
@@ -280,14 +260,13 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="relative flex flex-col items-center gap-5 overflow-hidden rounded-[2rem] bg-foreground px-6 py-16 text-center text-white">
-          <span className="absolute -left-10 -top-10 size-28 rounded-full bg-accent sm:size-32" />
-          <span className="absolute -bottom-10 -right-6 size-36 rotate-12 rounded-[2rem] bg-highlight" />
-          <span className="absolute right-10 top-8 size-8 rounded-full border-[5px] border-white/30" />
-          <h2 className="relative max-w-md text-3xl font-extrabold tracking-tight sm:text-4xl">
+        <section className="relative flex flex-col items-center gap-5 overflow-hidden rounded-[2rem] bg-accent px-6 py-16 text-center text-white">
+          <span className="absolute -left-10 -top-10 size-28 rounded-full bg-white/10 sm:size-36" />
+          <span className="absolute -bottom-12 -right-8 size-32 rotate-12 rounded-[2rem] bg-white/10 sm:size-40" />
+          <h2 className="font-display relative max-w-lg text-2xl font-bold tracking-tight sm:text-3xl">
             Готовы проверить себя?
           </h2>
-          <p className="relative max-w-sm text-white/70">
+          <p className="relative max-w-sm text-white/80">
             Семь минут — и вы узнаете свой результат.
           </p>
           <Link
