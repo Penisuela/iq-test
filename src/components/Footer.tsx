@@ -20,7 +20,7 @@ const COLUMNS = [
   },
   {
     title: "Информация",
-    items: [{ label: "Отменить подписку", href: "/#faq" }],
+    items: [{ label: "Отменить подписку", href: "/cancel" }],
   },
 ];
 
