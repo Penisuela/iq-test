@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { PLANS } from "../../convex/lib/plans";
 import { BellCurve } from "@/components/BellCurve";
 import { CategoryIcon } from "@/components/categoryIcon";
 import { FaqItem } from "@/components/FaqItem";
@@ -9,10 +8,8 @@ import {
   ArrowIcon,
   BoltIcon,
   ChartIcon,
-  CheckIcon,
   ClockIcon,
   ListIcon,
-  ShieldIcon,
   SparkIcon,
 } from "@/components/icons";
 import { MatrixPuzzle } from "@/components/MatrixPuzzle";
@@ -22,7 +19,6 @@ import { buttonClass, Card, Header, ProgressBar } from "@/components/ui";
 const NAV = [
   { href: "#tasks", label: "Задания" },
   { href: "#how", label: "Как это работает" },
-  { href: "#pricing", label: "Тарифы" },
   { href: "#faq", label: "FAQ" },
 ];
 
@@ -69,7 +65,7 @@ const FAQ = [
   },
   {
     q: "Тест бесплатный?",
-    a: "Пройти тест можно бесплатно. Платный только доступ к результату и разбору — цена указана ниже и на экране оплаты до списания.",
+    a: "Пройти тест можно бесплатно. Платный только доступ к результату и разбору — цена и условия показаны после теста, до оплаты.",
   },
   {
     q: "Как отменить подписку?",
@@ -282,46 +278,6 @@ export default function LandingPage() {
               Пример разбора. Ваши цифры будут другими.
             </p>
           </Card>
-        </section>
-
-        <section id="pricing" className="flex scroll-mt-6 flex-col gap-8">
-          <SectionTitle sub="Тест бесплатный. Платный только результат — и условия видны заранее.">
-            Честная цена
-          </SectionTitle>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {PLANS.map((plan) => (
-              <div
-                key={plan.id}
-                className={`flex flex-col gap-4 rounded-3xl p-6 ${
-                  plan.recurring ? "bg-foreground text-white" : "border border-border bg-surface"
-                }`}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="text-lg font-bold">{plan.title}</h3>
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-bold ${
-                      plan.recurring ? "bg-highlight text-foreground" : "bg-accent-soft text-accent"
-                    }`}
-                  >
-                    {plan.recurring ? "Подписка" : "Без подписки"}
-                  </span>
-                </div>
-                <p className="text-5xl font-extrabold tracking-tight">{plan.price} ₽</p>
-                <p className="opacity-70">{plan.terms}</p>
-              </div>
-            ))}
-          </div>
-          <ul className="flex flex-col gap-3 text-sm font-semibold sm:flex-row sm:gap-8">
-            {[
-              { icon: ShieldIcon, label: "Условия продления видны до оплаты" },
-              { icon: CheckIcon, label: "Отмена подписки в один клик" },
-            ].map(({ icon: Icon, label }) => (
-              <li key={label} className="flex items-center gap-2">
-                <Icon className="size-5 text-accent" />
-                {label}
-              </li>
-            ))}
-          </ul>
         </section>
 
         <section id="faq" className="grid scroll-mt-6 gap-8 lg:grid-cols-2 lg:gap-16">

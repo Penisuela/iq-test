@@ -20,10 +20,7 @@ const COLUMNS = [
   },
   {
     title: "Информация",
-    items: [
-      { label: "Тарифы", href: "/#pricing" },
-      { label: "Отменить подписку", href: "/#faq" },
-    ],
+    items: [{ label: "Отменить подписку", href: "/#faq" }],
   },
 ];
 
