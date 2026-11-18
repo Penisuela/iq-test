@@ -115,6 +115,35 @@ describe("paywall", () => {
   });
 });
 
+describe("отмена подписки", () => {
+  test("отменяет платежи с этим email и не трогает чужие", async () => {
+    const { t, token } = await finishedAttempt();
+    await t.mutation(api.payments.checkout, { token, email: "user@example.com" });
+
+    await t.mutation(api.payments.cancelSubscription, { email: "other@example.com" });
+    let payments = await t.run((ctx) => ctx.db.query("payments").collect());
+    expect(payments[0].cancelledAt).toBeUndefined();
+
+    await t.mutation(api.payments.cancelSubscription, { email: " USER@example.com " });
+    payments = await t.run((ctx) => ctx.db.query("payments").collect());
+    expect(payments[0].cancelledAt).toBeTypeOf("number");
+  });
+
+  test("после отмены оплаченный результат остаётся доступен", async () => {
+    const { t, token } = await finishedAttempt();
+    await t.mutation(api.payments.checkout, { token, email: "user@example.com" });
+    await t.mutation(api.payments.cancelSubscription, { email: "user@example.com" });
+    expect(await t.query(api.attempts.result, { token })).toMatchObject({ locked: false });
+  });
+
+  test("некорректный email отклоняется", async () => {
+    const t = convexTest(schema, modules);
+    await expect(
+      t.mutation(api.payments.cancelSubscription, { email: "не email" }),
+    ).rejects.toThrow();
+  });
+});
+
 describe("события воронки", () => {
   test("сохраняются известные события, неизвестные отклоняются", async () => {
     const t = convexTest(schema, modules);

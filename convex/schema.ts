@@ -26,7 +26,11 @@ export default defineSchema({
     currency: v.string(),
     email: v.string(),
     status: v.union(v.literal("succeeded"), v.literal("failed")),
-  }).index("by_attempt", ["attemptId"]),
+    // Момент отмены подписки; пока её не отменили, поля нет.
+    cancelledAt: v.optional(v.number()),
+  })
+    .index("by_attempt", ["attemptId"])
+    .index("by_email", ["email"]),
 
   events: defineTable({
     token: v.optional(v.string()),
