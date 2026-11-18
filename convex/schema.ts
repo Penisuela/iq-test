@@ -35,5 +35,7 @@ export default defineSchema({
   events: defineTable({
     token: v.optional(v.string()),
     name: v.string(),
+    // Для cta_click: с какой кнопки начали тест.
+    source: v.optional(v.string()),
   }).index("by_name", ["name"]),
 });

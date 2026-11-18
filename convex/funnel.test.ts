@@ -155,4 +155,11 @@ describe("события воронки", () => {
     const events = await t.run((ctx) => ctx.db.query("events").collect());
     expect(events).toHaveLength(1);
   });
+
+  test("клик по кнопке старта сохраняется с источником", async () => {
+    const t = convexTest(schema, modules);
+    await t.mutation(api.events.track, { name: "cta_click", source: "sticky" });
+    const events = await t.run((ctx) => ctx.db.query("events").collect());
+    expect(events[0]).toMatchObject({ name: "cta_click", source: "sticky" });
+  });
 });
