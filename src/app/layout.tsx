@@ -30,7 +30,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ru" className={`${onest.variable} ${unbounded.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
-        <ConvexClientProvider>{children}</ConvexClientProvider>
+        {/* Светлый фон держит эта обёртка, а не body: фон body Safari показывает в «пружине» под футером. */}
+        <div className="flex flex-1 flex-col bg-background">
+          <ConvexClientProvider>{children}</ConvexClientProvider>
+        </div>
       </body>
     </html>
   );
