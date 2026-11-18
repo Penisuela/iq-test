@@ -2,14 +2,31 @@
 
 export type Category = "logic" | "numeric" | "verbal";
 
+export type Shape = "circle" | "square" | "triangle" | "diamond";
+export type Fill = "outline" | "tint" | "solid";
+
+// Клетка матрицы: фигура, заливка, количество фигур и поворот в градусах.
+export type Cell = { shape: Shape; fill: Fill; count: number; rotation: number };
+
 export type Question = {
   id: string;
   category: Category;
   difficulty: 1 | 2 | 3;
   prompt: string;
-  options: string[];
+  // Для заданий с фигурами: 9 клеток по строкам, null — пропущенная.
+  matrix?: (Cell | null)[];
+  options: (string | Cell)[];
   correct: number;
 };
+
+const cell = (shape: Shape, fill: Fill, count = 1, rotation = 0): Cell => ({
+  shape,
+  fill,
+  count,
+  rotation,
+});
+
+const MATRIX_PROMPT = "Какой фигуры не хватает?";
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   logic: "Логика",
@@ -27,16 +44,23 @@ export const QUESTIONS: Question[] = [
     correct: 3,
   },
   {
-    id: "l1",
+    id: "m1",
     category: "logic",
     difficulty: 1,
-    prompt:
-      "Все розы — цветы. Некоторые цветы быстро вянут. Что следует из этого наверняка?",
+    prompt: MATRIX_PROMPT,
+    // Фигура задаётся строкой, заливка — столбцом.
+    matrix: [
+      cell("circle", "outline"), cell("circle", "tint"), cell("circle", "solid"),
+      cell("square", "outline"), cell("square", "tint"), cell("square", "solid"),
+      cell("triangle", "outline"), cell("triangle", "tint"), null,
+    ],
     options: [
-      "Все розы быстро вянут",
-      "Некоторые розы быстро вянут",
-      "Все розы — цветы",
-      "Ни одна роза не вянет",
+      cell("triangle", "outline"),
+      cell("square", "solid"),
+      cell("triangle", "solid"),
+      cell("circle", "solid"),
+      cell("triangle", "tint"),
+      cell("diamond", "solid"),
     ],
     correct: 2,
   },
@@ -49,20 +73,33 @@ export const QUESTIONS: Question[] = [
     correct: 1,
   },
   {
-    id: "n2",
-    category: "numeric",
-    difficulty: 1,
-    prompt: "Какого числа не хватает: 3, 6, 9, …, 15?",
-    options: ["10", "11", "12", "13"],
-    correct: 2,
-  },
-  {
     id: "l2",
     category: "logic",
     difficulty: 1,
     prompt: "Аня выше Бори, Боря выше Вики. Кто самый низкий?",
     options: ["Аня", "Боря", "Вика", "Нельзя определить"],
     correct: 2,
+  },
+  {
+    id: "m2",
+    category: "logic",
+    difficulty: 1,
+    prompt: MATRIX_PROMPT,
+    // Количество фигур растёт слева направо.
+    matrix: [
+      cell("circle", "solid", 1), cell("circle", "solid", 2), cell("circle", "solid", 3),
+      cell("square", "solid", 1), cell("square", "solid", 2), cell("square", "solid", 3),
+      cell("diamond", "solid", 1), cell("diamond", "solid", 2), null,
+    ],
+    options: [
+      cell("diamond", "solid", 3),
+      cell("diamond", "solid", 2),
+      cell("square", "solid", 3),
+      cell("diamond", "outline", 3),
+      cell("circle", "solid", 3),
+      cell("diamond", "solid", 1),
+    ],
+    correct: 0,
   },
   {
     id: "v2",
@@ -81,13 +118,25 @@ export const QUESTIONS: Question[] = [
     correct: 2,
   },
   {
-    id: "l3",
+    id: "m3",
     category: "logic",
     difficulty: 2,
-    prompt:
-      "Если сегодня не понедельник и не выходной, а завтра не пятница, какой день точно исключён сегодня?",
-    options: ["Вторник", "Среда", "Четверг", "Ни один из перечисленных"],
-    correct: 2,
+    prompt: MATRIX_PROMPT,
+    // Треугольник поворачивается на 90° в каждом столбце, заливка задаётся строкой.
+    matrix: [
+      cell("triangle", "outline", 1, 0), cell("triangle", "outline", 1, 90), cell("triangle", "outline", 1, 180),
+      cell("triangle", "tint", 1, 0), cell("triangle", "tint", 1, 90), cell("triangle", "tint", 1, 180),
+      cell("triangle", "solid", 1, 0), cell("triangle", "solid", 1, 90), null,
+    ],
+    options: [
+      cell("triangle", "solid", 1, 0),
+      cell("triangle", "tint", 1, 180),
+      cell("triangle", "solid", 1, 270),
+      cell("triangle", "solid", 1, 180),
+      cell("triangle", "solid", 1, 90),
+      cell("triangle", "outline", 1, 180),
+    ],
+    correct: 3,
   },
   {
     id: "v3",
@@ -106,21 +155,25 @@ export const QUESTIONS: Question[] = [
     correct: 1,
   },
   {
-    id: "l4",
+    id: "m4",
     category: "logic",
     difficulty: 2,
-    prompt:
-      "В забеге Олег обогнал бегуна, который шёл вторым. На каком месте теперь Олег?",
-    options: ["На первом", "На втором", "На третьем", "Нельзя определить"],
+    prompt: MATRIX_PROMPT,
+    // В каждой строке и каждом столбце каждая фигура и каждая заливка встречаются по одному разу.
+    matrix: [
+      cell("circle", "outline"), cell("square", "tint"), cell("triangle", "solid"),
+      cell("square", "solid"), cell("triangle", "outline"), cell("circle", "tint"),
+      cell("triangle", "tint"), cell("circle", "solid"), null,
+    ],
+    options: [
+      cell("square", "tint"),
+      cell("square", "outline"),
+      cell("circle", "outline"),
+      cell("triangle", "outline"),
+      cell("square", "solid"),
+      cell("diamond", "outline"),
+    ],
     correct: 1,
-  },
-  {
-    id: "v4",
-    category: "verbal",
-    difficulty: 2,
-    prompt: "Какое слово ближе всего по смыслу к слову «лаконичный»?",
-    options: ["Краткий", "Яркий", "Строгий", "Вежливый"],
-    correct: 0,
   },
   {
     id: "n5",
@@ -156,21 +209,33 @@ export const QUESTIONS: Question[] = [
     correct: 2,
   },
   {
-    id: "l6",
-    category: "logic",
-    difficulty: 3,
-    prompt:
-      "У Маши столько же братьев, сколько сестёр. У её брата сестёр вдвое больше, чем братьев. Сколько детей в семье?",
-    options: ["5", "6", "7", "9"],
-    correct: 2,
-  },
-  {
     id: "v6",
     category: "verbal",
     difficulty: 3,
     prompt: "Симптом относится к болезни так же, как улика — к …",
     options: ["суду", "преступлению", "следователю", "наказанию"],
     correct: 1,
+  },
+  {
+    id: "m5",
+    category: "logic",
+    difficulty: 3,
+    prompt: MATRIX_PROMPT,
+    // В третьем столбце столько фигур, сколько в первых двух вместе.
+    matrix: [
+      cell("circle", "outline", 1), cell("circle", "outline", 1), cell("circle", "solid", 2),
+      cell("square", "outline", 1), cell("square", "outline", 2), cell("square", "solid", 3),
+      cell("triangle", "outline", 2), cell("triangle", "outline", 1), null,
+    ],
+    options: [
+      cell("triangle", "solid", 2),
+      cell("triangle", "outline", 3),
+      cell("square", "solid", 3),
+      cell("triangle", "solid", 1),
+      cell("triangle", "solid", 3),
+      cell("circle", "solid", 3),
+    ],
+    correct: 4,
   },
   {
     id: "n7",
@@ -188,5 +253,26 @@ export const QUESTIONS: Question[] = [
       "Бита и мяч вместе стоят 110 рублей. Бита дороже мяча на 100 рублей. Сколько стоит мяч?",
     options: ["5 рублей", "10 рублей", "15 рублей", "100 рублей"],
     correct: 0,
+  },
+  {
+    id: "m6",
+    category: "logic",
+    difficulty: 3,
+    prompt: MATRIX_PROMPT,
+    // Количество задаётся строкой, фигура — столбцом, заливки в строках и столбцах не повторяются.
+    matrix: [
+      cell("circle", "outline", 1), cell("square", "tint", 1), cell("diamond", "solid", 1),
+      cell("circle", "tint", 2), cell("square", "solid", 2), cell("diamond", "outline", 2),
+      cell("circle", "solid", 3), cell("square", "outline", 3), null,
+    ],
+    options: [
+      cell("diamond", "solid", 3),
+      cell("diamond", "tint", 2),
+      cell("square", "tint", 3),
+      cell("diamond", "outline", 3),
+      cell("circle", "tint", 3),
+      cell("diamond", "tint", 3),
+    ],
+    correct: 5,
   },
 ];

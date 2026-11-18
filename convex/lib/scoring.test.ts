@@ -11,6 +11,18 @@ describe("банк вопросов", () => {
       expect(q.options[q.correct]).toBeDefined();
     }
   });
+
+  test("в заданиях-матрицах 9 клеток, одна пропущена, варианты не повторяются", () => {
+    const matrices = QUESTIONS.filter((q) => q.matrix);
+    expect(matrices.length).toBeGreaterThan(0);
+    for (const q of matrices) {
+      expect(q.matrix).toHaveLength(9);
+      expect(q.matrix!.filter((c) => c === null)).toHaveLength(1);
+      expect(q.matrix![8]).toBeNull();
+      const options = q.options.map((o) => JSON.stringify(o));
+      expect(new Set(options).size).toBe(options.length);
+    }
+  });
 });
 
 describe("scoreAttempt", () => {
