@@ -6,8 +6,8 @@ export type LegalDoc = {
 };
 
 export const LEGAL_UPDATED = "18 ноября 2026 года";
-export const LEGAL_OPERATOR = "ООО «Майндмарк»";
-export const LEGAL_EMAIL = "support@mindmark.example";
+const LEGAL_OPERATOR = "ООО «Майндмарк»";
+const LEGAL_EMAIL = "support@mindmark.example";
 
 export const LEGAL_DOCS: LegalDoc[] = [
   {

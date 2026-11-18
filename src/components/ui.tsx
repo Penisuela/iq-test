@@ -7,7 +7,7 @@ const buttonBase =
 export const buttonClass = `${buttonBase} bg-accent text-white shadow-[0_10px_24px_-10px_var(--color-accent)] hover:brightness-110`;
 export const buttonGhostClass = `${buttonBase} bg-accent-soft text-accent hover:brightness-95`;
 
-export function Logo() {
+function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5 font-display text-base font-bold tracking-tight">
       <span className="grid size-8 place-items-center rounded-xl bg-accent text-sm text-white">M</span>
