@@ -63,6 +63,8 @@ export const finish = mutation({
 });
 
 // Тизер для paywall: без балла и без разбивки по категориям.
+// Бесплатно открываем только название сильнейшего навыка и время — чтобы человек
+// увидел что-то личное до оплаты. Сами цифры по навыкам остаются закрытыми.
 // null — попытки с таким токеном нет (например, в браузере остался старый токен).
 export const paywall = query({
   args: { token: v.string() },
@@ -77,6 +79,7 @@ export const paywall = query({
       answered: v.number(),
       total: v.number(),
       durationSec: v.union(v.number(), v.null()),
+      strongest: v.union(v.string(), v.null()),
     }),
   ),
   handler: async (ctx, { token }) => {
@@ -92,9 +95,19 @@ export const paywall = query({
       durationSec: attempt.finishedAt
         ? Math.round((attempt.finishedAt - attempt.startedAt) / 1000)
         : null,
+      strongest: strongestCategory(attempt.categories),
     };
   },
 });
+
+// Навык с лучшей долей верных ответов. Если верных ответов нет вовсе, сильнейшего не называем.
+function strongestCategory(
+  categories: { category: string; correct: number; total: number }[] | undefined,
+): string | null {
+  if (!categories) return null;
+  const best = categories.reduce((a, b) => (b.correct / b.total > a.correct / a.total ? b : a));
+  return best.correct > 0 ? best.category : null;
+}
 
 export const result = query({
   args: { token: v.string() },

@@ -39,6 +39,10 @@ export default function PaywallPage() {
   }
 
   const { attempt } = state;
+  const secondsPerQuestion = Math.max(
+    1,
+    Math.round((attempt.durationSec ?? 0) / Math.max(1, attempt.answered)),
+  );
 
   return (
     <>
@@ -54,7 +58,28 @@ export default function PaywallPage() {
           </p>
         </div>
 
-        <Tint className="animate-rise [animation-delay:80ms]">
+        <Tint className="animate-rise [animation-delay:60ms]">
+          <p className="flex items-center gap-2 px-1 text-sm font-bold text-accent">
+            <CheckIcon className="size-4" />
+            Уже открыто для вас
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            <Card className="flex flex-col gap-1">
+              <p className="text-sm text-muted">Сильная сторона</p>
+              <p className="text-lg font-extrabold leading-tight">
+                {attempt.strongest ?? "Узнаете в разборе"}
+              </p>
+            </Card>
+            <Card className="flex flex-col gap-1">
+              <p className="text-sm text-muted">Темп</p>
+              <p className="text-lg font-extrabold leading-tight tabular-nums">
+                {secondsPerQuestion} с на вопрос
+              </p>
+            </Card>
+          </div>
+        </Tint>
+
+        <Tint className="animate-rise [animation-delay:120ms]">
           <Card className="relative overflow-hidden">
             <p className="text-sm font-semibold text-muted">Ваш IQ</p>
             {/* Заглушка: настоящий балл в браузер до оплаты не передаётся. */}

@@ -78,6 +78,16 @@ describe("paywall", () => {
     expect(teaser).toMatchObject({ status: "finished", paid: false, answered: QUESTIONS.length });
     expect(teaser).not.toHaveProperty("iq");
     expect(teaser).not.toHaveProperty("percentile");
+    expect(teaser).not.toHaveProperty("categories");
+    // Бесплатно открыто только название сильнейшего навыка, без цифр.
+    expect(teaser?.strongest).toBe("Логика");
+  });
+
+  test("если верных ответов нет, сильнейший навык не называется", async () => {
+    const t = convexTest(schema, modules);
+    const { token } = await t.mutation(api.attempts.start, {});
+    await t.mutation(api.attempts.finish, { token });
+    expect((await t.query(api.attempts.paywall, { token }))?.strongest).toBeNull();
   });
 
   test("оплата открывает результат и сохраняется в базе", async () => {
