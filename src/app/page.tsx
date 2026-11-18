@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { BellCurve } from "@/components/BellCurve";
 import { CategoryIcon } from "@/components/categoryIcon";
@@ -7,12 +6,13 @@ import { Footer } from "@/components/Footer";
 import { ArrowIcon, BoltIcon, ClockIcon, ListIcon } from "@/components/icons";
 import { EXAMPLE_MATRIX, Matrix } from "@/components/Matrix";
 import { SkillCard } from "@/components/SkillCard";
+import { StartLink } from "@/components/StartLink";
+import { StickyStart } from "@/components/StickyStart";
 import { TrackEvent } from "@/components/TrackEvent";
 import { buttonClass, Card, Header } from "@/components/ui";
 
 const NAV = [
   { href: "#tasks", label: "Задания" },
-  { href: "#how", label: "Как это работает" },
   { href: "#faq", label: "FAQ" },
 ];
 
@@ -20,21 +20,6 @@ const FACTS = [
   { icon: ListIcon, label: "20 вопросов" },
   { icon: ClockIcon, label: "Около 7 минут" },
   { icon: BoltIcon, label: "Без регистрации" },
-];
-
-const STEPS = [
-  {
-    title: "Пройдите тест",
-    text: "20 вопросов с нарастающей сложностью. Регистрация не нужна.",
-  },
-  {
-    title: "Откройте результат",
-    text: "Балл IQ и ваше место среди других участников.",
-  },
-  {
-    title: "Изучите разбор",
-    text: "Сильные стороны по трём навыкам мышления.",
-  },
 ];
 
 const SKILLS = [
@@ -161,34 +146,33 @@ export default function LandingPage() {
             </a>
           ))}
         </nav>
-        <Link
-          href="/quiz"
+        <StartLink
+          source="header"
           className="rounded-full bg-foreground px-5 py-2.5 text-sm font-bold text-white transition hover:bg-black"
         >
           Начать
-        </Link>
+        </StartLink>
       </Header>
 
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-20 overflow-x-clip px-4 pb-20 pt-6 lg:gap-28 lg:pt-14">
         <section className="grid items-center gap-12 lg:grid-cols-2 lg:gap-10">
           <div className="flex animate-rise flex-col gap-6">
             <h1 className="font-display text-[2rem] font-bold leading-[1.12] tracking-tight sm:text-5xl sm:leading-[1.1]">
-              Узнайте свой{" "}
+              Узнайте свой уровень IQ{" "}
               <span className="relative whitespace-nowrap">
                 <span className="absolute inset-x-0 bottom-1 h-3 rounded-full bg-highlight sm:h-4" />
-                <span className="relative">уровень IQ</span>
-              </span>{" "}
-              за 7 минут
+                <span className="relative">за 7 минут</span>
+              </span>
             </h1>
             <p className="text-lg text-muted">
               Задачи на логику, числа и вербальное мышление. В конце — балл IQ и разбор
               ваших сильных сторон.
             </p>
-            <div className="sm:max-w-xs">
-              <Link href="/quiz" className={buttonClass}>
+            <div id="hero-cta" className="sm:max-w-xs">
+              <StartLink source="hero" className={buttonClass}>
                 Начать тест
                 <ArrowIcon />
-              </Link>
+              </StartLink>
             </div>
             <ul className="flex flex-wrap gap-x-5 gap-y-2">
               {FACTS.map(({ icon: Icon, label }) => (
@@ -210,21 +194,6 @@ export default function LandingPage() {
             Какие будут задания
           </SectionTitle>
           <TaskExamples />
-        </section>
-
-        <section id="how" className="flex scroll-mt-6 flex-col gap-8">
-          <SectionTitle>Как это работает</SectionTitle>
-          <ol className="grid divide-y divide-border rounded-3xl border border-border bg-surface sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-            {STEPS.map((step, i) => (
-              <li key={step.title} className="flex flex-col gap-2 p-6 sm:p-8">
-                <span className="mb-4 font-display text-4xl font-bold text-accent sm:mb-8">
-                  0{i + 1}
-                </span>
-                <h3 className="text-xl font-extrabold">{step.title}</h3>
-                <p className="text-muted">{step.text}</p>
-              </li>
-            ))}
-          </ol>
         </section>
 
         <section className="flex flex-col gap-8">
@@ -260,7 +229,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="relative flex flex-col gap-6 overflow-hidden rounded-[2rem] bg-accent p-6 text-white sm:p-10 md:flex-row md:items-center md:justify-between md:gap-10">
+        <section id="final-cta" className="relative flex flex-col gap-6 overflow-hidden rounded-[2rem] bg-accent p-6 text-white sm:p-10 md:flex-row md:items-center md:justify-between md:gap-10">
           <span className="absolute -right-10 -top-16 size-40 rounded-full bg-white/10" />
           <div className="relative flex flex-col gap-2">
             <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
@@ -268,17 +237,18 @@ export default function LandingPage() {
             </h2>
             <p className="text-lg text-white/80">Семь минут — и вы узнаете свой результат.</p>
           </div>
-          <Link
-            href="/quiz"
+          <StartLink
+            source="final"
             className="relative inline-flex h-14 shrink-0 items-center justify-center gap-2 rounded-2xl bg-highlight px-8 text-base font-bold text-foreground transition active:scale-[0.98]"
           >
             Начать тест
             <ArrowIcon />
-          </Link>
+          </StartLink>
         </section>
       </main>
 
       <Footer />
+      <StickyStart />
     </>
   );
 }
