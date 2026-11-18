@@ -2,17 +2,47 @@
 
 @theme inline {
   --font-sans: var(--font-manrope), system-ui, sans-serif;
+}
 
-  --color-background: #f6f7fb;
+@theme {
+  --color-background: #f4f3ee;
   --color-surface: #ffffff;
-  --color-foreground: #12142b;
-  --color-muted: #6b7088;
-  --color-border: #e3e6f0;
-  --color-accent: #4f46e5;
-  --color-accent-soft: #eef0ff;
+  --color-foreground: #15161c;
+  --color-muted: #6e7080;
+  --color-border: #e4e2da;
+  --color-accent: #5546ff;
+  --color-accent-soft: #ecebff;
+  --color-highlight: #c9f45c;
+  --color-danger: #d92d20;
+
+  --animate-rise: rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+html {
+  color-scheme: light;
 }
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
