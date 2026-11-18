@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { PLANS } from "../../convex/lib/plans";
 import { BellCurve } from "@/components/BellCurve";
+import { FaqItem } from "@/components/FaqItem";
+import { Footer } from "@/components/Footer";
 import { ArrowIcon, CheckIcon } from "@/components/icons";
 import { TrackEvent } from "@/components/TrackEvent";
 import { buttonClass, Card, Header, ProgressBar } from "@/components/ui";
@@ -146,7 +148,7 @@ export default function LandingPage() {
           </Card>
         </section>
 
-        <section className="flex flex-col gap-6">
+        <section id="pricing" className="flex scroll-mt-6 flex-col gap-6">
           <div className="flex flex-col gap-2">
             <h2 className="text-3xl font-extrabold tracking-tight">Честная цена</h2>
             <p className="text-lg text-muted">
@@ -166,22 +168,11 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-2 lg:gap-16">
+        <section id="faq" className="grid scroll-mt-6 gap-6 lg:grid-cols-2 lg:gap-16">
           <h2 className="text-3xl font-extrabold tracking-tight">Вопросы и ответы</h2>
           <div className="flex flex-col gap-3">
             {FAQ.map((item) => (
-              <details
-                key={item.q}
-                className="group rounded-2xl border border-border bg-surface px-5 py-4"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold [&::-webkit-details-marker]:hidden">
-                  {item.q}
-                  <span className="text-2xl font-medium leading-none text-muted transition group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <p className="mt-3 text-muted">{item.a}</p>
-              </details>
+              <FaqItem key={item.q} question={item.q} answer={item.a} />
             ))}
           </div>
         </section>
@@ -201,10 +192,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="mx-auto w-full max-w-5xl px-4 pb-10 text-xs text-muted">
-        Mindmark — демонстрационный проект. Результат носит ознакомительный характер и не
-        является медицинским или психологическим заключением.
-      </footer>
+      <Footer />
     </>
   );
 }
